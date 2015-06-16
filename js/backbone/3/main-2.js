@@ -6,8 +6,13 @@
 var SingleLink = Marionette.ItemView.extend({
   tagName: "li",
   //template: _.template("<a href='<%-path%>'><%-path%></a>")
-  template: function(model){
-    return JSON.stringify(model);
+  template: function (model) {
+    if (model !== null && typeof model === 'object') {
+      return "[+]";
+    } else {
+      return typeof model;
+    }
+    //return "" + JSON.stringify(model);
   }
 
 
