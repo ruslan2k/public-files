@@ -5,7 +5,15 @@
 
 var SingleLink = Marionette.ItemView.extend({
   tagName: "li",
-  template: '#template-myItemView',
+  //template: '#template-myItemView',
+  template: function (serialized_model) {
+    //return JSON.stringify(serialized_model);
+    return _.map(serialized_model, function (val, key) {
+      return JSON.stringify(key)
+        + JSON.stringify(val);
+    });
+    //return serialized_model.a;
+  }
   //template: _.template("<a href='<%-path%>'><%-path%></a>")
   //template: function (model) {
   //  return "=>" + JSON.stringify(model);
@@ -26,9 +34,9 @@ var ListView = Marionette.CollectionView.extend({
 });
 
 var teeData = [
-  {a: 1},
-  {a: 2, b: [2, 3, 4]},
-  {a: 3, c: {d: {e: 5}}}
+  {a: "a1"},
+  {a: "a2", b: [2, 3, 4]},
+  {a: "a3", c: {d: 5}}
 ];
 
 var list = new Backbone.Collection(_.map(teeData, function (item) {
