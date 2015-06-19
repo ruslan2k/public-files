@@ -1,0 +1,32 @@
+<head>
+  <title>simple-todos</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+
+  {{> hello}}
+  <h1>2</h1>
+  <p>
+  {{#each items}}
+    {{> item}}
+    {{> view_item}}
+  {{/each}}
+  </p>
+</body>
+
+<template name="view_item">
+</template>
+
+<template name="item">
+  <div>
+  {{!-- this --}}
+  {{display_a}}
+  </div>
+</template>
+
+
+<template name="hello">
+  <button>Click Me</button>
+  <p>You've pressed the button {{counter}} times.</p>
+</template>
