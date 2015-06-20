@@ -9,13 +9,13 @@
   <h1>2</h1>
   <p>
   {{#each items}}
-    {{> item}}
     {{> view_item}}
   {{/each}}
   </p>
 </body>
 
 <template name="view_item">
+  {{echo this}}
 </template>
 
 <template name="item">

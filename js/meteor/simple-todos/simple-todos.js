@@ -1,6 +1,24 @@
+function abc () {
+  console.log("abc");
+}
+
+
+
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
+
+  Template.view_item.helpers({
+    echo: function (param) {
+      var objKeys = $.map(param, function (value, key) {
+        return key;
+      });
+      return $.map(objKeys, function (key) {
+        return JSON.stringify({"key": key, "val": param[key]});
+      });
+      //return "param: " + JSON.stringify(param);
+    }
+  });  
 
   Template.body.helpers({
     items: [
@@ -32,3 +50,5 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 }
+
+

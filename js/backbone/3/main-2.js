@@ -2,15 +2,38 @@
  *
  */
 
-
 var SingleLink = Marionette.ItemView.extend({
   tagName: "li",
-  //template: '#template-myItemView',
+
+  ui: {
+    edit: '.edit',
+    label: 'label',
+    value: '.value',
+    key: '.key',
+  },
+
+  events: {
+    'dblclick @ui.label': 'onEditClick',
+    'focusout @ui.value': 'onEditFocusout',
+  },
+
+  onEditClick: function () {
+    this.$el.addClass('editing');
+    this.ui.edit.focus();
+    this.ui.edit.val(this.ui.edit.val());
+  },
+
+  onEditFocusout: function () {
+    console.log(this.ui.value.val());
+  },
+
   template: function (serialized_model) {
+    //console.log(JSON.stringify(this));
+    console.log(this.model);
     //return JSON.stringify(serialized_model);
     return _.map(serialized_model, function (val, key) {
-      return JSON.stringify(key)
-        + JSON.stringify(val);
+      return "<span>" + key + "</span>:"
+        + '<input class="value" " value="' + val + '"> ';
     });
     //return serialized_model.a;
   }
@@ -52,9 +75,5 @@ var list = new Backbone.Collection(teeData);
   collection: list,
   el: '.link-area'
 })).render();
-
-
-
-
 
 
