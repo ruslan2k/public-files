@@ -3,6 +3,20 @@
 
   <div class="link-area">hello</div>
 
+  <script id="some-template" type="text/html">
+    <ul>
+      <%
+        _.each(items, function (k, v) {
+          console.log(JSON.stringify(k));
+          console.log(JSON.stringify(v));
+  
+      %>
+      <li> item: <%- k %> </li>
+      <% }); %>
+    </ul>
+  </script>
+
+
   <script type="text/html" id="template-key-value">
     <span class="js-key"><%- key %></span>:
     <span class="js-value"><%- value %></span>
