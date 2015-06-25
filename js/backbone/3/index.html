@@ -2,18 +2,17 @@
 <body>
 
   <div class="link-area">hello</div>
+  <div id="model-area"></div>
 
   <script id="some-template" type="text/html">
-    <ul>
+    <li>
       <%
-        _.each(items, function (k, v) {
-          console.log(JSON.stringify(k));
-          console.log(JSON.stringify(v));
-  
+        _.each(items, function (item) {
+          console.log(JSON.stringify(item));
       %>
-      <li> item: <%- k %> </li>
+        <%= item.new_key %>: <input value="<%= item.new_val %>"/>
       <% }); %>
-    </ul>
+    </li>
   </script>
 
 

@@ -2,25 +2,26 @@
  *
  */
 
-var MyModel = Backbone.Collection.extend();
-
-var myModel = new MyModel([{foo: "bar"}]);
+var myModel = new Backbone.Model({foo: "bar", baz: "qux"});
 
 var KeyValueView = Marionette.ItemView.extend({
+  el: "#model-area",
   //template: "#some-template",
   template: function (model) {
-    var my_template = $("#my-template");
+    var $my_template = $("#some-template");
     var new_model = _.map(model, function (val, key) {
-     return {new_key: key, new_val: val}; 
+      return {new_key: key, new_val: val}; 
     });
-    var template = _.template(my_template.html(), new_model);
-  },
+    console.log(JSON.stringify(new_model));
+    return _.template($my_template.html(), {items: new_model});
+  }
 });
 
 
 
 var view = new KeyValueView({
-  collection: myModel
+  model: myModel
+  //collection: myModel
 });
 
 view.render();
