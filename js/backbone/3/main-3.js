@@ -6,7 +6,9 @@ var myModel = new Backbone.Model({foo: "bar", baz: "qux"});
 
 var KeyValueView = Marionette.ItemView.extend({
   el: "#model-area",
-  //template: "#some-template",
+  ui: {
+    value: ".value",
+  },
   template: function (model) {
     var $my_template = $("#some-template");
     var new_model = _.map(model, function (val, key) {
@@ -14,6 +16,15 @@ var KeyValueView = Marionette.ItemView.extend({
     });
     console.log(JSON.stringify(new_model));
     return _.template($my_template.html(), {items: new_model});
+  },
+  events: {
+    "focusout": "onEditFocusout",
+  },
+
+  onEditFocusout: function (e) {
+    console.log(e);
+    //var valueText = this.ui.value.val().trim();
+    //console.log(valueText);
   }
 });
 
