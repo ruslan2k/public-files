@@ -7,7 +7,6 @@ var myModel = new Backbone.Model({foo: "bar", baz: "qux"});
 var KeyValueView = Marionette.ItemView.extend({
   el: "#model-area",
   ui: {
-    value: ".value",
   },
   template: function (model) {
     var $my_template = $("#some-template");
@@ -22,7 +21,10 @@ var KeyValueView = Marionette.ItemView.extend({
   },
 
   onEditFocusout: function (e) {
-    console.log(e);
+    console.log(e.srcElement);
+    console.log(e.type, e.target);
+    console.log(e.type, e.target.key);
+    console.log(e.result, e.data, e.currentTarget);
     //var valueText = this.ui.value.val().trim();
     //console.log(valueText);
   }

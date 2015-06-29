@@ -10,7 +10,8 @@
         _.each(items, function (item) {
           console.log(JSON.stringify(item));
       %>
-        <%= item.new_key %>: <input class="value" value="<%= item.new_val %>"/>
+        <%= item.new_key %>:
+        <input data-key="<%= item.new_key %>" value="<%= item.new_val %>"/>
       <% }); %>
     </li>
   </script>
