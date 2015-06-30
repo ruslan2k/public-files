@@ -11,7 +11,7 @@
           console.log(JSON.stringify(item));
       %>
         <%= item.new_key %>:
-        <input data-key="<%= item.new_key %>" value="<%= item.new_val %>"/>
+        <input class="model-val" data-key="<%= item.new_key %>" value="<%= item.new_val %>"/>
       <% }); %>
     </li>
   </script>

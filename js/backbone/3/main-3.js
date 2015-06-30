@@ -17,7 +17,7 @@ var KeyValueView = Marionette.ItemView.extend({
     return _.template($my_template.html(), {items: new_model});
   },
   events: {
-    "focusout": "onEditFocusout",
+    "focusout .model-val": "onEditFocusout",
   },
 
   onEditFocusout: function (e) {
@@ -25,6 +25,8 @@ var KeyValueView = Marionette.ItemView.extend({
     console.log(e.type, e.target);
     console.log(e.type, e.target.key);
     console.log(e.result, e.data, e.currentTarget);
+    console.log(e.relatedTarget);
+    console.log(JSON.stringify(e.target));
     //var valueText = this.ui.value.val().trim();
     //console.log(valueText);
   }
