@@ -1,54 +1,39 @@
-function abc () {
-  console.log("abc");
-}
-
-
-
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
+  // This code only runs on the client
+  Template.body.helpers({
+    tasks: [
+      { text: "This is task 1", a: 11 },
+      { text: "This is task 2", a: 21, b: 22 },
+      { text: "This is task 3", a: 31, b: 32, c: 33 },
+    ],
 
-  Template.view_item.helpers({
-    echo: function (param) {
-      var objKeys = $.map(param, function (value, key) {
+    view_item: function (item) {
+      var objKeys = $.map(item, function (value, key) {
         return key;
       });
-      return $.map(objKeys, function (key) {
-        return JSON.stringify({"key": key, "val": param[key]});
+      var ret_val = $.map(objKeys, function (key) {
+        return JSON.stringify({"key": key, "val": item[key]});
       });
-      //return "param: " + JSON.stringify(param);
-    }
-  });  
-
-  Template.body.helpers({
-    items: [
-      {a: 1},
-      {a: 2},
-      {a: 3},
-    ],
-    display_a: function () {
-      return "a";
+      console.log(ret_val);
+      return ret_val;
     }
   });
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+  Template.body.events({
+    "submit .new-task": function (event) {
+
+      var text = event.target.text.value;
+
+      console.log(event);
+      console.log(event.target);
+
+      event.target.text.value = "";
+
+      return false;
+
     }
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
 }
 
 
