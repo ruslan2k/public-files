@@ -12,16 +12,12 @@
       </form>
     </header>
 
-
-    <ul>
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-    </ul>
     <ul>
       {{#each tasks}}
       <li>
-        {{view_item this}}
+        {{#each view_item this}}
+          {{> single_item}}
+        {{/each}}[x]
       </li>
       {{/each}}
     </ul>
@@ -35,6 +31,11 @@
   </li>
 </template>
 
+<template name="single_item">
+  {{key}}: <input value="{{val}}" />
+</template>
 
-
+<template name="item">
+  {{this}} {{name}} {{number}}
+</template>
 
