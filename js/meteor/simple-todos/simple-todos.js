@@ -37,7 +37,16 @@ if (Meteor.isClient) {
 
       return false;
 
+    },
+
+    "focusout .key-value": function (event) {
+      var text = event.target.value;
+      console.log(text);
+      console.log(event.target);
+      console.log(event.currentTarget);
+      console.log(event.currentTarget.dataset.key);
     }
+
   });
 
 }
