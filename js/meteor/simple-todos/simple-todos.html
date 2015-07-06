@@ -32,7 +32,9 @@
 </template>
 
 <template name="single_item">
-  <span data-key="{{ key }}" class="{{ key }} key-value">{{key}}: <input value="{{val}}" /></span>
+  <span>{{key}}:
+    <input data-key="{{ key }}" class="key-value" value="{{val}}" />
+  </span>
 </template>
 
 <template name="item">
