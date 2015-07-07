@@ -1,16 +1,22 @@
+Items = new Mongo.Collection("items");
+
 if (Meteor.isClient) {
   // This code only runs on the client
   Template.body.helpers({
-    tasks: [
-      { text: "This is task 1", a: 11 },
-      { text: "This is task 2", a: 21, b: 22 },
-      { text: "This is task 3", a: 31, b: 32, c: 33 },
-    ],
+    //tasks: [
+    //  { text: "This is task 1", a: 11 },
+    //  { text: "This is task 2", a: 21, b: 22 },
+    //  { text: "This is task 3", a: 31, b: 32, c: 33 },
+    //],
 
-    items: [
-      { name: "Ruslan", number: 42 },
-      { name: "Ira", number: 911 },
-    ],
+    //items: [
+    //  { name: "Ruslan", number: 42 },
+    //  { name: "Ira", number: 911 },
+    //],
+
+    items: function () {
+      return Items.find({});
+    },
 
     view_item: function (item) {
       var objKeys = $.map(item, function (value, key) {
