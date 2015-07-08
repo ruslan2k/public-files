@@ -32,9 +32,13 @@
 </template>
 
 <template name="single_item">
+  {{#if isIndex key}}
+    <span>{{key}}: {{val}}</span>
+  {{else}}
   <span>{{key}}:
     <input data-key="{{ key }}" class="key-value" value="{{val}}" />
   </span>
+  {{/if}}
 </template>
 
 <template name="item">

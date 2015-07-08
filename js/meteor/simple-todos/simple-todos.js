@@ -56,6 +56,16 @@ if (Meteor.isClient) {
 
   });
 
+  Template.single_item.helpers({
+    isIndex: function (key) {
+      var re = /^_id$/;
+      if (re.exec(key)) {
+        return true;
+      }
+      //console.log(key);
+      return false;
+    }
+  });
 }
 
 
