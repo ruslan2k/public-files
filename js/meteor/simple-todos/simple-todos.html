@@ -1,23 +1,23 @@
 <head>
-  <title>Todo List</title>
+  <title>Item List</title>
 </head>
 
 <body>
   <div class="container">
     <header>
-      <h1>Todo List</h1>
+      <h1>Item List</h1>
 
-      <form class="new-task">
-        <input type="text" name="text" placeholder="Type to add new tasks" />
+      <form class="new-item">
+        <input type="text" name="key" placeholder="Type Key" />
       </form>
     </header>
 
     <ul>
       {{#each items}}
-      <li>
+      <li><button class="delete">&times;</button>
         {{#each view_item this}}
           {{> single_item}}
-        {{/each}}[x]
+        {{/each}}
       </li>
       {{/each}}
     </ul>
