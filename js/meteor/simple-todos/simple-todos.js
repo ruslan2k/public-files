@@ -41,6 +41,7 @@ if (Meteor.isClient) {
       var new_item = {};
       new_item[key] = text;
       console.log(new_item);
+      console.log(this._id);
       // FIXME
     },
 
