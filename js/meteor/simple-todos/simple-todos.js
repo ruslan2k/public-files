@@ -25,28 +25,23 @@ if (Meteor.isClient) {
     "submit .new-item": function (event) {
 
       var key = event.target.key.value;
-      //console.log(key);
       var new_item = {};
       new_item[key] = "";
 
       Items.insert(new_item);
 
-      //console.log(event);
-      //console.log(event.target);
-
-      //event.target.text.value = "";
       event.target.key.value = "";
 
       return false;
     },
 
     "focusout .key-value": function (event) {
+      var key = event.target.dataset.key;
       var text = event.target.value;
-      console.log(text);
-      console.log(event.target);
-      console.log(event.target.dataset.key);
-      //console.log(event.currentTarget);
-      //console.log(event.currentTarget.dataset.key);
+      var new_item = {};
+      new_item[key] = text;
+      console.log(new_item);
+      // FIXME
     },
 
     "click .delete": function () {
