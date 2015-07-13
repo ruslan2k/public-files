@@ -1,16 +1,12 @@
+Items = new Mongo.Collection("items");
+
 if (Meteor.isClient) {
   // This code only runs on the client
   Template.body.helpers({
-    tasks: [
-      { text: "This is task 1", a: 11 },
-      { text: "This is task 2", a: 21, b: 22 },
-      { text: "This is task 3", a: 31, b: 32, c: 33 },
-    ],
 
-    items: [
-      { name: "Ruslan", number: 42 },
-      { name: "Ira", number: 911 },
-    ],
+    items: function () {
+      return Items.find({});
+    },
 
     view_item: function (item) {
       var objKeys = $.map(item, function (value, key) {
@@ -26,29 +22,45 @@ if (Meteor.isClient) {
   });
 
   Template.body.events({
-    "submit .new-task": function (event) {
+    "submit .new-item": function (event) {
 
-      var text = event.target.text.value;
+      var key = event.target.key.value;
+      var new_item = {};
+      new_item[key] = "";
 
-      console.log(event);
-      console.log(event.target);
+      Items.insert(new_item);
 
-      event.target.text.value = "";
+      event.target.key.value = "";
 
       return false;
-
     },
 
     "focusout .key-value": function (event) {
+      var key = event.target.dataset.key;
       var text = event.target.value;
-      console.log(text);
-      console.log(event.target);
-      console.log(event.currentTarget);
-      console.log(event.currentTarget.dataset.key);
+      var new_item = {};
+      new_item[key] = text;
+      console.log(new_item);
+      // FIXME
+    },
+
+    "click .delete": function () {
+      Items.remove(this._id);
+      //console.log(this._id);
     }
 
   });
 
+  Template.single_item.helpers({
+    isIndex: function (key) {
+      var re = /^_id$/;
+      if (re.exec(key)) {
+        return true;
+      }
+      //console.log(key);
+      return false;
+    }
+  });
 }
 
 
