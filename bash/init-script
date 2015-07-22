@@ -1,8 +1,111 @@
-#!/bin/sh
-#
-
+#!/bin/bash
 # http://techarena51.com/index.php/how-to-create-an-init-script-on-centos-6/
+#Author Leo G
+# backup daemon
+
+# chkconfig: 2345 20 80
+#The above indicates that the script should be started in levels 2, 3, 4, and 5, #that its start priority should be 20, and that its stop priority should be 80.
+# description: syncs two files
+# Source function library.
+. /etc/rc.d/init.d/functions
+#Define variables
+exec="/path/to/backup"
+prog="backup"
+
+start() {
+    [ -x $exec ] || exit 5
+    echo -n $"Starting $prog: "
+    # use daemon to start the service
+        daemon $exec &
+    retval=$?
+    echo
+     return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    # use kill proc to stop the service
+        killproc $prog -TERM
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+
+force_reload() {
+    restart
+}
+
+rh_status() {
+    # run checks to determine if the service is running or use generic status
+    status $prog
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
 
 
+case "$1" in
+    start)
+        #Only if not running,  start
+        rh_status_q && echo "process already started" && exit 0
+        $1
+        ;;
+    stop)
+        # Only if service is running stopt
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        rh_status_q || exit 7
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+        exit 2
+
+esac
+exit $?
+
+
+#   Test the script:
+#
+# [leo@linux-vps]$ ./initscript.bash start
+# Starting backup:  OK
+# 
+#   Check the status of our backup daemon.
+# 
+# [leo@linux-vps]$ ./initscript.bash status
+# backup (pid 2023) is running...
+# 
+#   Alright, lets stop it.
+# 
+# [leo@linux-vps]$ ./initscript.bash stop
+# Stopping backup:    OK
 
 
