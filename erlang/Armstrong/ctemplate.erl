@@ -15,7 +15,7 @@ loop(X) ->
 	receive
         {From, Request} ->
             io:format("From:[~p] Received:[~p]", [From, Request]),
-			loop(X)
+			loop(X);
 		Any ->
 			io:format("Received:~p~n", [Any]),
 			loop(X)
