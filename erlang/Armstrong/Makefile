@@ -9,13 +9,14 @@
 
 ERL = erl -boot start_clean
 
-MODS = module1 module \
-	module3 \
-	moduleN
+#MODS = module1 module \
+#	module3 \
+#	moduleN
 
 all : compile
 
-compile : ${MODS:%=%.beam} subdirs
+#compile : ${MODS:%=%.beam} subdirs
+compile : ${%=%.beam} subdirs
 
 special1.beam : special1.erl
 	${ERL} -Dflag1 -W0 special1.erl
@@ -24,8 +25,8 @@ application1 : compile
 	${ERL} -pa Dirl -s application1 start Arg1 Arg2
 
 subdirs :
-	cd dir1; $(MAKE)
-	$(MAKE) -C dir2
+	#cd dir1; $(MAKE)
+	#$(MAKE) -C dir2
 
 # remove all the code
 clean :
@@ -33,7 +34,7 @@ clean :
 	cd dir1; $(MAKE) clean
 	$(MAKE) -C dir2 clean
 
-escript :
+escript : compile
 	escript script
 
 

@@ -13,9 +13,16 @@ rpc(Pid, Request) ->
 
 loop(X) ->
 	receive
+        {From, Request} ->
+            io:format("From:[~p] Received:[~p]", [From, Request]),
+			loop(X)
 		Any ->
 			io:format("Received:~p~n", [Any]),
 			loop(X)
 	end.
+
+hello() ->
+    {_, {Module, Function, Arity}} = process_info(self(), current_function),
+    io:format("Module: ~p, Function: ~p, Arity: ~p~n",[Module, Function, Arity]).
 
 

@@ -1,6 +1,14 @@
 #!/usr/bin/env escript
 
+%% -import(ctemplate.erl, [start/0]).
+%% -import(ctemplate).
+
 main(Args) ->
+	
+
+    ctemplate:start(),
+    ctemplate:hello(),
     io:format("Hello world~n").
+
 
 
