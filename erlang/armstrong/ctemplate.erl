@@ -2,7 +2,7 @@
 -compile(export_all).
 
 start() ->
-	spawn(?MODULE, loop, []).
+	spawn(ctemplate, loop, []).
 
 rpc(Pid, Request) ->
 	Pid ! {self(), Request},
