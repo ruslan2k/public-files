@@ -74,8 +74,14 @@ server(User_List) ->
     end.
 
 %%% Start the server
+start_server() ->
+    register(messenger, spawn(messenger, server, [[]])).
+
+%%% Server adds a new user to the user list
 
 
 
+
+%%% http://www.erlang.org/doc/getting_started/conc_prog.html
 
 
