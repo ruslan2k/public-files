@@ -78,6 +78,37 @@ start_server() ->
     register(messenger, spawn(messenger, server, [[]])).
 
 %%% Server adds a new user to the user list
+sercer_logon(From, Name, User_List) ->
+    %% check if logged on anywhere else
+    case lists:keymember(Name, 2, User_List) of
+        true ->
+            From ! {messenger, stop, user_exists_at_other_node}, % reject lofgon
+            User_List;
+        false ->
+            From ! {messenger, logged_on},
+            [{From, Name} | User_List]      % add user to the list
+    end.
+
+%%% Server deletes a user from list
+server_logoff(From, User_List) ->
+    lists:keydelete(From, 1, User_List).
+
+
+%%% Server tansfer a message between user
+server_transfer(From, To, Message, User_List) ->
+    %% check that the user is logged on and who he is
+    case lists:keysearch(From, 1, User_List) of
+        false ->
+            From ! {messenger, receiver_not_found};
+        {value, {ToPid, To}} ->
+            ToPid ! {message_from, Name, Message},
+            From ! {messenger, sent}
+    end.
+
+
+%%% User Commands
+
+
 
 
 
