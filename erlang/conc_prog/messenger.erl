@@ -107,9 +107,53 @@ server_transfer(From, To, Message, User_List) ->
 
 
 %%% User Commands
+logon(Name) ->
+    case whereis(mess_client) of
+        undefined ->
+            register(mess_client,
+                spawn(messenger, client, [server_node(), Name]));
+        _ -> already_logged_on
+    end.
 
+logoff() ->
+    mess_client ! logoff.
 
+message(ToName, Message) ->
+    case whereis(mess_client) of % Test if the client is running
+        undefined ->
+            not_logged_on;
+        _ -> mess_client ! {message_to, ToName, Message},
+            ok
+    end.
 
+%%% The client process which runs on each server node
+client(Server_Node, Name) ->
+    {messenger, Server_Node} ! {self(), logon(), logon, Name},
+    await_result(),
+    client(Server_Node).
+
+client(Server_Node) ->
+    receive
+        logoff ->
+            {messenger, Server_Node} ! {self(), logoff},
+            exit(normal);
+        {message_to, ToName, Message} ->
+            {messenger, Server_Node} ! {self(), message_ to, ToName, Message},
+            await_resust();
+        {message_from, FromName, Message} ->
+            io:format("", [FromName, Message])
+    end,
+    client(Server_Node).
+
+%%% wait for a response from the server
+await_result() ->
+    receive
+        {messenger, stop, Why} -> % Stop the client
+            io:format("~p~n", [Why]),
+            exit(normal);
+        {messenger, What} -> % Normal response
+            io:fromat("~p~n", [What])
+    end.
 
 
 
