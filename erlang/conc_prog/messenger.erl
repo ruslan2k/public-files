@@ -49,12 +49,18 @@
 %%% name of the node where the messenger server runs
 
 -module(messenger).
--export([]).
+-export([start_server/0, server/1, logon/1, logoff/0, message/2, client/2]).
+-export([server_node/0]).
+% -export([server_node_atom/0]).
 
 %%% Change the function below to return the name of the node where the
 %%% messenger server runs
 server_node() ->
-    messenger@bill.
+    {ok, Host} = inet:gethostname(),
+    list_to_atom("messenger@" ++ Host).
+
+%server_node_atom() ->
+%    messenger@node.
 
 
 %%% This is the server process for the "messenger"
@@ -113,20 +119,6 @@ server_transfer(From, Name, To, Message, User_List) ->
             From ! {messenger, sent}
     end.
 
-%%% Server tansfer a message between user
-server_transfer(Fon
-
-%%% Server tansfer a message between user
-server_transfer(From, Name, To, Message, User_List) ->
-    %% check that the user is logged on and who he is
-    case lists:keysearch(From, 1, User_List) of
-        false ->
-            From ! {messenger, receiver_not_found};
-        {value, {ToPid, To}} ->
-            ToPid ! {message_from, Name, Message},
-            From ! {messenger, sent}
-    end.
-
 
 %%% User Commands
 logon(Name) ->
@@ -150,7 +142,7 @@ message(ToName, Message) ->
 
 %%% The client process which runs on each server node
 client(Server_Node, Name) ->
-    {messenger, Server_Node} ! {self(), logon(), logon, Name},
+    {messenger, Server_Node} ! {self(), logon, Name},
     await_result(),
     client(Server_Node).
 
@@ -161,9 +153,9 @@ client(Server_Node) ->
             exit(normal);
         {message_to, ToName, Message} ->
             {messenger, Server_Node} ! {self(), message_to, ToName, Message},
-            await_resust();
+            await_result();
         {message_from, FromName, Message} ->
-            io:format("", [FromName, Message])
+            io:format("Message from ~p: ~p~n", [FromName, Message])
     end,
     client(Server_Node).
 
@@ -174,62 +166,7 @@ await_result() ->
             io:format("~p~n", [Why]),
             exit(normal);
         {messenger, What} -> % Normal response
-            io:fromat("~p~n", [What])
-    end.
-
-
-
-%%% http://www.erlang.org/doc/getting_started/conc_prog.html
-
-
-
-%%% User Commands
-logon(Name) ->
-    case whereis(mess_client) of
-        undefined ->
-            register(mess_client,
-                spawn(messenger, client, [server_node(), Name]));
-        _ -> already_logged_on
-    end.
-
-logoff() ->
-    mess_client ! logoff.
-
-message(ToName, Message) ->
-    case whereis(mess_client) of % Test if the client is running
-        undefined ->
-            not_logged_on;
-        _ -> mess_client ! {message_to, ToName, Message},
-            ok
-    end.
-
-%%% The client process which runs on each server node
-client(Server_Node, Name) ->
-    {messenger, Server_Node} ! {self(), logon(), logon, Name},
-    await_result(),
-    client(Server_Node).
-
-client(Server_Node) ->
-    receive
-        logoff ->
-            {messenger, Server_Node} ! {self(), logoff},
-            exit(normal);
-        {message_to, ToName, Message} ->
-            {messenger, Server_Node} ! {self(), message_to, ToName, Message},
-            await_resust();
-        {message_from, FromName, Message} ->
-            io:format("", [FromName, Message])
-    end,
-    client(Server_Node).
-
-%%% wait for a response from the server
-await_result() ->
-    receive
-        {messenger, stop, Why} -> % Stop the client
-            io:format("~p~n", [Why]),
-            exit(normal);
-        {messenger, What} -> % Normal response
-            io:fromat("~p~n", [What])
+            io:format("~p~n", [What])
     end.
 
 
