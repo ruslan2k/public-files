@@ -110,6 +110,7 @@ server_transfer(From, To, Message, User_List) ->
     end.
 %%% If the user exists, send the message
 server_transfer(From, Name, To, Message, User_List) ->
+	io:format("~p~n", [User_List]),
     %% Find the receiver and send the message
     case list:keysearch(To, 2, User_List) of
         false ->

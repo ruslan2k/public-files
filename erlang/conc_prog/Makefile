@@ -8,10 +8,12 @@ messenger.beam :
 
 tmux : messenger.beam
 	tmux new -d -s messenger 'erl -sname messenger -s messenger start_server || sleep 300'
-	sleep 5
+	sleep 3
 	tmux split-window -v 'erl -sname peter -s messenger logon peter'
-	sleep 5
-	tmux split-window -v erl -sname james -eval "messenger:logon(james), messenger:message(peter, \'hello')"
+	tmux split-window -v 'erl -sname james -s messenger logon james'
+	# messenger:message(peter, 'hello')
 	tmux attach-session -t messenger
 
+clean :
+	rm -f *.beam
 
