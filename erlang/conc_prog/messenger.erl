@@ -68,6 +68,7 @@ server_node() ->
 server(User_List) ->
     receive
         {From, logon, Name} ->
+            io:format("logon from: ~p name: ~p~n", [From, Name]),
             New_User_List = server_logon(From, Name, User_List),
             server(New_User_List);
         {From, logoff} ->

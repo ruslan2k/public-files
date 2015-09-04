@@ -1,4 +1,4 @@
-messenger.beam :
+messenger.beam : messenger.erl
 	erlc -W messenger.erl
 
 1 :
