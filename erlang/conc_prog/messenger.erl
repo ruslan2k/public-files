@@ -87,16 +87,19 @@ start_server() ->
 %%% Server adds a new user to the user list
 server_logon(From, Name, User_List) ->
     %% check if logged on anywhere else
-    io:format("server_logon From:~p Name:~p User_List:<~p>~n", [From, Name, User_List]),
+    io:format("server_logon From:~p~n", [From]),
+    io:format("server_logon Name:~p~n", [Name]),
+    io:format("server_logon User_List:~p~n", [User_List]),
     case lists:keymember(Name, 2, User_List) of
         true ->
             From ! {messenger, stop, user_exists_at_other_node}, % reject lofgon
             User_List;
         false ->
             From ! {messenger, logged_on},
-            [{From, Name} | User_List],      % add user to the list
-    io:format("User_List:~p~n",[User_List])
+            [{From, Name} | User_List]      % add user to the list
     end.
+    %% end,
+    %% io:format("User_List:~p~n",[User_List]).
 
 %%% Server deletes a user from list
 server_logoff(From, User_List) ->
