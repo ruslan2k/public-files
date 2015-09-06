@@ -3,6 +3,7 @@
 </head>
 
 <body>
+  {{> loginButtons}}
   <div class="container">
     <header>
       <h1>Item List</h1>
@@ -43,6 +44,10 @@
 
 <template name="item">
   {{this}} {{name}} {{number}}
+</template>
+
+<template name="email">
+  {{>singInWithEmailModal}}
 </template>
 
 

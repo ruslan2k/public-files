@@ -24,6 +24,8 @@ if (Meteor.isClient) {
   Template.body.events({
     "submit .new-item": function (event) {
 
+      Meteor.call("addItem", "test");
+
       var key = event.target.key.value;
       var new_item = {};
       new_item[key] = "";
@@ -63,5 +65,15 @@ if (Meteor.isClient) {
     }
   });
 }
+
+Meteor.methods({
+  addItem: function (text) {
+    //
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+  // FIXME
+  }
+});
 
 

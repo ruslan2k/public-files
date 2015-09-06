@@ -10,8 +10,8 @@ tmux : messenger.beam
 	tmux new -d -s messenger 'vim messenger.erl'
 	tmux split-window -h 'erl -sname messenger -s messenger start_server || sleep 300'
 	sleep 3
-	tmux split-window -v 'erl -sname peter -s messenger logon peter'
-	tmux split-window -v 'erl -sname james -s messenger logon james'
+	#tmux split-window -v 'erl -sname peter -s messenger logon peter'
+	#tmux split-window -v 'erl -sname james -s messenger logon james'
 	# messenger:message(peter, 'hello')
 	tmux attach-session -t messenger
 

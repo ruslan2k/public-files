@@ -118,7 +118,7 @@ server_transfer(From, To, Message, User_List) ->
 server_transfer(From, Name, To, Message, User_List) ->
 	io:format("~p~n", [User_List]),
     %% Find the receiver and send the message
-    case list:keysearch(To, 2, User_List) of
+    case lists:keysearch(To, 2, User_List) of
         false ->
             From ! {messenger, receiver_not_found};
         {value, {ToPid, To}} ->
@@ -162,7 +162,9 @@ client(Server_Node) ->
             {messenger, Server_Node} ! {self(), message_to, ToName, Message},
             await_result();
         {message_from, FromName, Message} ->
-            io:format("Message from ~p: ~p~n", [FromName, Message])
+            io:format("Message from ~p: ~p~n", [FromName, Message]);
+        {users_list, Server_Node, User_List} ->
+            io:format("request User_list~n", [User_List])
     end,
     client(Server_Node).
 
