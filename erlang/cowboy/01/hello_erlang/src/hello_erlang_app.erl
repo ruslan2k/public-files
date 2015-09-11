@@ -6,9 +6,12 @@
 
 start(_Type, _Args) ->
     Dispatch = cowboy_router:compile([
+        %% {HostMatch, list({PathMatch, Handler, Opts})}
         {'_', [{"/", hello_handler, []}]}
     ]),
-    {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
+    %% Name, NbAcceptors, TransOpts, ProtoOpts
+    {ok, _} = cowboy:start_http(my_http_listener, 100,
+                [{port, 8080}],
                 [{env, [{dispatch, Dispatch}]}]
     ),
 	hello_erlang_sup:start_link().
