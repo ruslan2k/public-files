@@ -11,6 +11,17 @@ def check_auth(username, password):
     """
     return username == 'admin' and password == 'secret'
 
+def authenticate():
+    """Sends a 404 response that enables basic auth"""
+    return Response(
+        'Login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def require_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # FIXME
+
 
 app = Flask(__name__)
 
