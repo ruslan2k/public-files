@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-
 from functools import wraps
 from flask import Flask, request, Response
 from flask.ext.pymongo import PyMongo
+
+import logging
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -32,14 +33,27 @@ app = Flask(__name__)
 app.config.from_pyfile('app.cfg')
 mongo = PyMongo(app)
 
+
+
+
 @app.route("/")
 #@require_auth
 def hello_world():
-    users = mongo.db.users.find({'online': True})
-    print users
+    users = ""
+    for user in mongo.db.users.find():
+        users += "<li>%s</li>\n"% user
+    #logging.warning(app.config["ADMIN_PASS"])
     return "Hello world<br>" \
-        + "<a href='http://flask.pocoo.org/snippets/8/'>doc</a>"
-    
+        + " <a href='insert'>insert</a> " \
+        + " <ul> " + users + "</ul>" \
+        + " <a href='http://flask.pocoo.org/snippets/8/'>doc</a> "
+
+@app.route("/insert")
+def insert():
+    user = {'name': "vasya"}
+    mongo.db.users.insert(user)
+    return "OK"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
