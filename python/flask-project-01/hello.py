@@ -45,6 +45,7 @@ def hello_world():
     #logging.warning(app.config["ADMIN_PASS"])
     return "Hello world<br>" \
         + " <a href='insert'>insert</a> " \
+        + " <a href='register'>register</a> " \
         + " <ul> " + users + "</ul>" \
         + " <a href='http://flask.pocoo.org/snippets/8/'>doc</a> "
 
@@ -53,6 +54,11 @@ def insert():
     user = {'name': "vasya"}
     mongo.db.users.insert(user)
     return "OK"
+
+@app.route("/register")
+def register():
+    return request.data
+    
 
 
 if __name__ == "__main__":
