@@ -45,7 +45,7 @@ def hello_world():
     #logging.warning(app.config["ADMIN_PASS"])
     return "Hello world<br>" \
         + " <a href='insert'>insert</a> " \
-        + " <a href='register'>register</a> " \
+        + " <a href='register'>register?a=1&b=2&c=3</a> " \
         + " <ul> " + users + "</ul>" \
         + " <a href='http://flask.pocoo.org/snippets/8/'>doc</a> "
 
@@ -57,7 +57,7 @@ def insert():
 
 @app.route("/register")
 def register():
-    return request.data
+    return type(request.data)
     
 
 
