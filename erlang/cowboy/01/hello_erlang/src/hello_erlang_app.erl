@@ -4,7 +4,16 @@
 -export([start/2]).
 -export([stop/1]).
 
+-include("user_record.hrl").
+
 start(_Type, _Args) ->
+    %% Start mnesia database in current nide
+    %% which is nonode@nohost
+    mnesia:create_schema([node()]),
+    mnesia:start(),
+
+    mnesia:create_table(user, []),
+
     Dispatch = cowboy_router:compile([
         %% {HostMatch, list({PathMatch, Handler, Opts})}
         {'_', [{"/", hello_handler, []}]}
