@@ -1,5 +1,5 @@
 start :
-	python hello.py
+	python run.py
 
 lynx :
 	lynx localhost:5000

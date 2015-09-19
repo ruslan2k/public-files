@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from functools import wraps
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 from flask.ext.pymongo import PyMongo
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 
@@ -39,10 +39,9 @@ def require_auth(f):
 
 
 app = Flask(__name__)
-app.config.from_pyfile('app.cfg')
+#app.config.from_pyfile('app.cfg')
+app.config.from_object('config')
 mongo = PyMongo(app)
-
-
 
 
 @app.route("/")
@@ -80,6 +79,6 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
 
 
