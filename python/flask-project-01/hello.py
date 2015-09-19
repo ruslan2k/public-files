@@ -3,8 +3,17 @@
 from functools import wraps
 from flask import Flask, request, Response
 from flask.ext.pymongo import PyMongo
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
 
 import logging
+
+
+class RegistrationForm(Form):
+    username = TextField('Username')
+    email = TextField('Email Address')
+    password = PasswordField('Password')
+    #confirm = PasswordField('Repeat Password')
+
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -49,15 +58,24 @@ def hello_world():
         + " <ul> " + users + "</ul>" \
         + " <a href='http://flask.pocoo.org/snippets/8/'>doc</a> "
 
+
 @app.route("/insert")
 def insert():
     user = {'name': "vasya"}
     mongo.db.users.insert(user)
     return "OK"
 
+
 @app.route("/register")
 def register():
-    return type(request.data)
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = {"name": form.username.data,
+            "email": form.email.data,
+            "password": "*****"
+        }
+        return user
+    return render_template('templates/register.html', form=form)
     
 
 
