@@ -74,7 +74,7 @@ def register():
             "password": "*****"
         }
         return user
-    return render_template('templates/register.html', form=form)
+    return render_template('app/register.html', form=form)
     
 
 
