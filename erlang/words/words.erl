@@ -2,6 +2,9 @@
 
 -export([init/0]).
 -export([start/0]).
+-export([readlines/1]).
+-export([readlines_v2/1]).
+-export([get_all_lines/1]).
 
 
 start() ->
