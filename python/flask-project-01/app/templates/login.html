@@ -1,0 +1,18 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="post" name="login">
+  {{ form.hidden_tag() }}
+  <p>
+    Please enter your OpenID:<br>
+    {{ form.openid() }}<br>
+    {% for error in form.errors.openid %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p><input type="submit" value="Sing In"></p>
+</form>
+{% endblock %}
+
+
