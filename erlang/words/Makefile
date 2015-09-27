@@ -1,8 +1,7 @@
-compile :
-	true
+e : words_app.beam
+	escript words.escript ~/Dropbox/words Zulu
 
-
-
-
+words_app.beam : words_app.erl
+	erlc -W $<
 
 
