@@ -2,6 +2,7 @@
 
 -export([init/0]).
 -export([start/0]).
+-export([perms/1]).
 -export([readlines/1]).
 -export([readlines_v2/1]).
 -export([get_all_lines/1]).
@@ -21,11 +22,16 @@ find_words_in_list(Words, List) -> true.
 
 
 find_single_word(Word, List) ->
-    lists:any(fun(X) -> compare_strings(X, Word) end, List).
+    BinWord = list_to_binary(Word),
+    lists:any(fun(X) -> compare_strings(X, BinWord) end, List).
+
+
+perms([]) -> [[]];
+perms(L) -> [[H|T] || H <- L, T <- perms(L--[H])].
 
 
 compare_strings(S1, S2) ->
-    io:format("~p == ~p~n", [S1, S2]),
+    %io:format("~p == ~p~n", [S1, S2]),
     S1 == S2.
 
 

@@ -1,5 +1,5 @@
 e : words_app.beam
-	escript words.escript ~/Dropbox/words Zulu
+	escript words.escript ~/Dropbox/words Zoe
 
 words_app.beam : words_app.erl
 	erlc -W $<
