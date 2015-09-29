@@ -23,7 +23,7 @@ find_words_in_list(Words, List) -> true.
 
 find_single_word(Word, List) ->
     BinWord = list_to_binary(Word),
-    lists:any(fun(X) -> compare_strings(X, BinWord) end, List).
+    lists:any(fun(X) -> compare_strings_v2(X, BinWord) end, List).
 
 
 perms([]) -> [[]];
@@ -33,6 +33,9 @@ perms(L) -> [[H|T] || H <- L, T <- perms(L--[H])].
 compare_strings(S1, S2) ->
     %io:format("~p == ~p~n", [S1, S2]),
     S1 == S2.
+
+compare_strings_v2(S1, S2) ->
+    string:to_lower(binary_to_list(S1)) == string:to_lower(binary_to_list(S2)).
 
 
 get_words() -> ["a", "b", "c"].
