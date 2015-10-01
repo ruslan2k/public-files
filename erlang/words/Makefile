@@ -1,4 +1,6 @@
-e : words_app.beam
+#e : words_app.beam
+e :
+	time escript words.escript ~/Dropbox/words wood
 	time escript words.escript ~/Dropbox/words was
 	time escript words.escript ~/Dropbox/words army
 	time escript words.escript ~/Dropbox/words Mary
