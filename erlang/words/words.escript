@@ -7,7 +7,8 @@ main([WordsFile, Word]) ->
     Words = readlines(WordsFile),
     Annagrams = perms(Word),
     Result = lists:filter(fun(X) -> find_single_word(X, Annagrams) end, Words),
-    io:format("Result: ~p~n", [Result])
+    io:format("Result: ~p~n", [Result]),
+    loop("dfdfd")
     ;
 
 main(_) ->
@@ -17,6 +18,13 @@ main(_) ->
 usage() ->
     io:format("usage:\n\twords.escript path_to/words_file Word\n"),
     halt(1).
+
+loop(Word) ->
+    %% Find word:
+    io:format("Word: [~p]~n", [Word]),
+    Result = io:read("Word> "),
+    {_, NewWord} = Result,
+    loop(NewWord).
 
 
 find_single_word(Word, List) ->
