@@ -8,7 +8,8 @@ main([WordsFile, Word]) ->
     Annagrams = perms(Word),
     Result = lists:filter(fun(X) -> find_single_word(X, Annagrams) end, Words),
     io:format("Result: ~p~n", [Result]),
-    loop("dfdfd")
+    {ok, [NewWord]} = io:fread("Enter a word: ", "~s"),
+    loop(NewWord)
     ;
 
 main(_) ->
@@ -22,8 +23,9 @@ usage() ->
 loop(Word) ->
     %% Find word:
     io:format("Word: [~p]~n", [Word]),
-    Result = io:read("Word> "),
-    {_, NewWord} = Result,
+    {ok, [NewWord]} = io:fread("Enter a word: ", "~s"),
+    %% Result = io:read("Word> "),
+    %% {_, NewWord} = Result,
     loop(NewWord).
 
 
