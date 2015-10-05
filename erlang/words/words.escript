@@ -5,6 +5,7 @@ main([WordsFile, Word]) ->
     %io:format("Word: ~p~n", [Word]),
     %io:format("WordsFile: ~p~n", [WordsFile]),
     Words = readlines(WordsFile),
+    lists:foreach(fun(X) -> put(string:to_lower(binary_to_list(X)), X) end, Words),
     Annagrams = perms(Word),
     Result = lists:filter(fun(X) -> find_single_word(X, Annagrams) end, Words),
     io:format("Result: ~p~n", [Result]),
@@ -23,6 +24,9 @@ usage() ->
 loop(Word) ->
     %% Find word:
     io:format("Word: [~p]~n", [Word]),
+    %case get(Word) ->
+    %    undefined
+    %    Value
     {ok, [NewWord]} = io:fread("Enter a word: ", "~s"),
     %% Result = io:read("Word> "),
     %% {_, NewWord} = Result,
