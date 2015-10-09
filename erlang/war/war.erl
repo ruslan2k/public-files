@@ -1,6 +1,7 @@
 -module(war).
 -compile(export_all).
 
+
 start() ->
     spawn(fun() -> loop([]) end).
 
@@ -17,5 +18,3 @@ loop(X) ->
             io:format("Received:~p~n", [Any]),
             loop(X)
     end.
-
-
