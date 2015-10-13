@@ -16,6 +16,47 @@ rpc(Pid, Request) ->
             Response
     end.
 
+server_node() ->
+    {ok, Host} = inet:gethostname(),
+    list_to_atom("table@" ++ Host).
+
+
+logon(Name) ->
+    case whereis(card_player) of
+        undefined ->
+            register(card_player, spawn(war, player, [server_node(), Name]));
+        _ -> already_logged_on
+    end.
+
+
+player(ServerNode, Name) ->
+    {table, ServerNode} ! {self(), logon, Name},
+    await_result(),
+    player(ServerNode).
+
+
+player(ServerNode) ->
+    receive
+        logoff ->
+            exit(normal);
+        Any ->
+            io:format("Any:<~p>~n", [Any])
+    end,
+    player(ServerNode).
+
+
+await_result() ->
+    receive
+        {table, stop, Why} -> % Stop the player
+            io:format("~p~n", [Why]),
+            exit(normal);
+        {table, What} -> % Normal response
+            io:format("~p~n", [What])
+    after
+        5000 ->
+            io:format("Timeout", [])
+    end.
+
 
 get_card(Pid) -> rpc(Pid, get_card).
 
