@@ -1,4 +1,4 @@
-%%% http://stackoverflow.com/questions/146622/sieve-of-eratosthenes-in-erlang
+%% http://stackoverflow.com/questions/146622/sieve-of-eratosthenes-in-erlang
 
 -module(primes).
 -export([sieve/1]).
