@@ -59,9 +59,6 @@ server_node() ->
     {ok, Host} = inet:gethostname(),
     list_to_atom("messenger@" ++ Host).
 
-%server_node_atom() ->
-%    messenger@node.
-
 
 %%% This is the server process for the "messenger"
 %%% the user list has the format [{ClientPid1, Name1},{ClientPid22, Name2},...]

@@ -8,6 +8,30 @@ start(L) ->
     spawn(fun() -> loop(L) end).
 
 
+loop(Cards) ->
+    receive
+        {From, {pass_card, NewCards}} ->
+            io:format("Received cards:~p~n", [NewCards]),
+            From ! {self(), ok},
+            loop(NewCards);
+        {From, get_card} ->
+            io:format("Cards:[~p]~n", [Cards]),
+            NewCards = case Cards of
+                [] ->
+                    From ! {self(), empty},
+                    Cards;
+                [H | T] ->
+                    From ! {self(), H},
+                    T
+            end,
+            loop(NewCards);
+        Any ->
+            io:format("Received:~p~n", [Any]),
+            io:format("Cards:~p~n", [Cards]),
+            loop(Cards)
+    end.
+
+
 rpc(Pid, Request) ->
     io:format("Pid=[~p] Request=[~p]~n", [Pid, Request]),
     Pid ! {self(), Request},
