@@ -161,7 +161,7 @@ client(Server_Node) ->
         {message_from, FromName, Message} ->
             io:format("Message from ~p: ~p~n", [FromName, Message]);
         {users_list, Server_Node, User_List} ->
-            io:format("request User_list~n", [User_List])
+            io:format("request User_list:<~p>~n", [User_List])
     end,
     client(Server_Node).
 
