@@ -49,7 +49,8 @@
 %%% name of the node where the messenger server runs
 
 -module(messenger).
--export([start_server/0, server/1, logon/1, logoff/0, message/2, client/2]).
+-export([start_server/0]).
+-export([server/1, logon/1, logoff/0, message/2, client/2]).
 -export([server_node/0]).
 % -export([server_node_atom/0]).
 
@@ -61,7 +62,8 @@ server_node() ->
 
 
 %%% This is the server process for the "messenger"
-%%% the user list has the format [{ClientPid1, Name1},{ClientPid22, Name2},...]
+%%% the user list has the format
+%%% [{ClientPid1, Name1},{ClientPid22, Name2},...]
 server(User_List) ->
     receive
         {From, logon, Name} ->
