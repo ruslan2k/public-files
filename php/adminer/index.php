@@ -1,1 +1,1 @@
-adminer-4.2.1-mysql-en.php
+adminer-4.2.2.php
