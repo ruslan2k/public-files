@@ -2,13 +2,10 @@
 -compile([export_all]).
 
 get_master() ->
-    ok.
+    {store, 'store@ru2.aptinfo.net'}.
 
 start_master() ->
     register(store, spawn(store, server, [[]])).
-
-%%  start_slave(Master) ->
-%%     spawn(
 
 server(Nodes) ->
     receive
@@ -29,5 +26,27 @@ slave_connect(From, Name, Nodes) ->
             [{From, Name} | Nodes]
     end.
 
-    
-% EOF
+
+start_slave() ->
+    [Name | _] = re:split(atom_to_list(node()), "@"),
+    start_slave(Name);
+start_slave(Name) ->
+    slave(get_master(), Name).
+
+slave(Master, Name) ->
+    %% Master ! {self(), connect, Name}  
+    io:format("", [{self(), connect, Name}]),
+    {store, Master} ! {self(), commect, Name},
+    await_result(),
+    slave(Master).
+
+await_result() ->
+    receive
+        {store, stop, Why} ->
+            io:format("~p~n", [Why]),
+            exit(normal);
+        {store, What} ->
+            io:format("~p~n", [What])
+    end.
+ 
+%% EOF
