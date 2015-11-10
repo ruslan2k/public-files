@@ -178,7 +178,4 @@ await_result() ->
     end.
 
 
-
 %%% http://www.erlang.org/doc/getting_started/conc_prog.html
-
-

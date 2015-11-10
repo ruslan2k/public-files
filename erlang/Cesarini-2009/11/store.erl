@@ -19,26 +19,35 @@ server(Nodes) ->
 slave_connect(From, Name, Nodes) ->
     case lists:keymember(Name, 2, Nodes) of
         true ->
-            From ! {master, stop, node_exists},
+            From ! {store, stop, node_exists},
             Nodes;
         false ->
-            From ! {master, logged_on},
+            From ! {store, logged_on},
             [{From, Name} | Nodes]
     end.
 
 
 start_slave() ->
     [Name | _] = re:split(atom_to_list(node()), "@"),
-    start_slave(Name);
+    start_slave(Name).
+
 start_slave(Name) ->
     slave(get_master(), Name).
 
 slave(Master, Name) ->
     %% Master ! {self(), connect, Name}  
-    io:format("", [{self(), connect, Name}]),
-    {store, Master} ! {self(), commect, Name},
+    %% io:format("Slave(", [{self(), connect, Name}]),
+    {store, Master} ! {self(), slave_connect, Name},
     await_result(),
     slave(Master).
+
+slave(Master) ->
+    receive
+        {put, Key, Value} ->
+            put(Key, Value);
+        {get, Key} ->
+            get(Key)
+    end.
 
 await_result() ->
     receive
@@ -48,5 +57,6 @@ await_result() ->
         {store, What} ->
             io:format("~p~n", [What])
     end.
- 
+
+
 %% EOF
