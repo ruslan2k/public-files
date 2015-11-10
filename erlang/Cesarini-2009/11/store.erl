@@ -35,18 +35,20 @@ start_slave(Name) ->
     slave(get_master(), Name).
 
 slave(Master, Name) ->
-    %% Master ! {self(), connect, Name}  
-    %% io:format("Slave(", [{self(), connect, Name}]),
-    {store, Master} ! {self(), slave_connect, Name},
+    io:format("Slave name <~p>~n", [Name]),
+    Master ! {self(), slave_connect, Name},
     await_result(),
     slave(Master).
 
 slave(Master) ->
+    io:format("Master: <~p>~n", [Master]),
     receive
         {put, Key, Value} ->
-            put(Key, Value);
+            put(Key, Value),
+            slave(Master);
         {get, Key} ->
-            get(Key)
+            get(Key),
+            slave(Master)
     end.
 
 await_result() ->
@@ -55,7 +57,7 @@ await_result() ->
             io:format("~p~n", [Why]),
             exit(normal);
         {store, What} ->
-            io:format("~p~n", [What])
+            io:format("What <~p>~n", [What])
     end.
 
 
