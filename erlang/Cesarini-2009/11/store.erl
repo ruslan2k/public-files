@@ -32,7 +32,12 @@ start_slave() ->
     start_slave(Name).
 
 start_slave(Name) ->
-    slave(get_master(), Name).
+    case whereis(store_slave) of
+        undefined ->
+            register(store_slave,
+                spawn(store, slave, [get_master(), Name]));
+        _ -> slready_logged_on
+    end.
 
 slave(Master, Name) ->
     io:format("Slave name <~p>~n", [Name]),
@@ -44,6 +49,7 @@ slave(Master) ->
     io:format("Master: <~p>~n", [Master]),
     receive
         {put, Key, Value} ->
+            io:format("Put"),
             put(Key, Value),
             slave(Master);
         {get, Key} ->
@@ -60,5 +66,22 @@ await_result() ->
             io:format("What <~p>~n", [What])
     end.
 
+put_data(Key, Value) ->
+    case whereis(store_slave) of
+        undefined ->
+            not_logged_on;
+        _ ->
+            store_slave ! {put, Key, Value},
+                ok
+    end.
+
+get_stat(Key) ->
+    %% case whereis(store_slave) of
+    %%     undefined ->
+    %%         not_logged_on;
+    %%     _ ->
+    %%         store_slave ! {get, Key}
+    %% end.
+    ok.
 
 %% EOF
