@@ -1,7 +1,11 @@
 FROM fedora
 
-#RUN dnf update -y
+RUN dnf -y install \
+    php-mcrypt
+
 RUN dnf install -y composer
 
-#RUN echo Hello World
-RUN php -v
+RUN dnf -y install \
+    screen \
+    tmux \
+    make
