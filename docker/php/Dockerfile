@@ -9,3 +9,6 @@ RUN dnf -y install \
     screen \
     tmux \
     make
+
+RUN dnf -y install \
+    php-mysqlnd
