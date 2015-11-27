@@ -13,7 +13,15 @@ server(Nodes) ->
             io:format("Nodes: ~p~n", [Nodes]),
             io:format("From <~p>, Name <~p>~n", [From, Name]),
             New_Nodes = slave_connect(From, Name, Nodes),
-            server(New_Nodes)
+            server(New_Nodes);
+        {From, put, Key, Value} ->
+            io:format("put key [~p] value [~p]~n", [Key, Value]),
+            From ! {ok, put},
+            server(Nodes);
+        {From, get, Key} ->
+            io:format("get key [~p] value [~p]~n", [Key, get(Key)]),
+            From ! {get, get(Key)},
+            server(Nodes)
     end.
 
 slave_connect(From, Name, Nodes) ->
@@ -49,11 +57,13 @@ slave(Master) ->
     io:format("Master: <~p>~n", [Master]),
     receive
         {put, Key, Value} ->
-            io:format("Put"),
+            io:format("Slave put~n"),
             put(Key, Value),
             slave(Master);
-        {get, Key} ->
-            get(Key),
+        {get, From, Key} ->
+            io:format("Slave get~n"),
+            Value = get(Key),
+            From ! {Key, Value},
             slave(Master)
     end.
 
@@ -67,21 +77,17 @@ await_result() ->
     end.
 
 put_data(Key, Value) ->
-    case whereis(store_slave) of
-        undefined ->
-            not_logged_on;
-        _ ->
-            store_slave ! {put, Key, Value},
-                ok
+    get_master() ! {self(), put, Key, Value},
+    receive
+        {ok, put} -> {ok, put}
     end.
 
-get_stat(Key) ->
-    %% case whereis(store_slave) of
-    %%     undefined ->
-    %%         not_logged_on;
-    %%     _ ->
-    %%         store_slave ! {get, Key}
-    %% end.
-    ok.
+
+get_data(Key) ->
+    get_master() ! {self(), get, Key},
+    receive
+        {get, Value} -> Value
+    end.
+
 
 %% EOF
