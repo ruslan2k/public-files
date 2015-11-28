@@ -8,7 +8,8 @@ RUN dnf install -y composer
 RUN dnf -y install \
     screen \
     tmux \
-    make
+    make \
+    vim
 
 RUN dnf -y install \
     php-mysqlnd
