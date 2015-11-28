@@ -1,8 +1,5 @@
 FROM fedora
 
-RUN dnf -y install \
-    php-mcrypt
-
 RUN dnf install -y composer
 
 RUN dnf -y install \
@@ -12,4 +9,6 @@ RUN dnf -y install \
     vim
 
 RUN dnf -y install \
-    php-mysqlnd
+    php-pecl-yaml \
+    php-mysqlnd \
+    php-mcrypt
