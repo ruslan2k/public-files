@@ -10,4 +10,4 @@ find(Name)       -> rpc(name_server, {find, Name}).
 
 init() -> dict:new().
 handle({add, Name, Place}, Dict) -> {ok, dict:store(Name, Place, Dict)};
-handle({find, Name}, Dict)       -> {dict:find(Name, Dict), Dicr}.
+handle({find, Name}, Dict)       -> {dict:find(Name, Dict), Dict}.
