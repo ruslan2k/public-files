@@ -25,9 +25,22 @@ withdraw(Who, Amount) -> gen_server:call(?MODULE, {remove, Who, Amount}).
 init({}) -> {ok, ets:new(?MODULE, [])}.
 
 handle_call({new, Who}, _From, Tab) ->
-    Replay = case ets:lookup(Tab, Who) of
+    Reply = case ets:lookup(Tab, Who) of
             [] -> ets:insert(Tab, {Who, 0}),
                 {welcome, Who};
             [_] -> {Who, you_already_are_a_customer}
         end,
     {reply, Reply, Tab};
+
+handle_call({add, Who, X}, _From, Tab) ->
+    Reply = case ets:lookup(Tab, Who) of
+            [] -> not_a_customer;
+            [{Who, Balance}] ->
+                NewBalance = Balance + X,
+                ets:insert(Tab, {Who, NewBalance}),
+                {thanks, Who, your_balance_is, NewBalance}
+        end,
+    {reply, Reply, Tab};
+
+handle_call(stop, _From, Tab) ->
+    {stop, normal, stopped, Tab}.
