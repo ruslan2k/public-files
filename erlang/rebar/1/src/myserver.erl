@@ -20,15 +20,18 @@
 %% API Function Definitions
 %% ------------------------------------------------------------------
 
-start_link() ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+start_link(Port) ->
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
 
+start_link() ->
+    start_link(?DEFAULT_PORT).
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 
-init(Args) ->
-    {ok, Args}.
+init([Port]) ->
+    {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
+    {ok, LSock}.
 
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
