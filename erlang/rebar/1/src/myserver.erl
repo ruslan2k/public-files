@@ -55,10 +55,17 @@ handle_call(increment_count, _From, State) ->
 handle_cast(stop, State) ->
     {stop, normal, State}.
 
-handle_info(_Info, State) ->
+%handle_info(_Info, State) ->
+%    {noreply, State}.
+handle_info({tcp, _Socket, _RawData}, State) ->
+    io:format("~p~n", ["tcp_message"]),
+    %RequestCount = State#state.request_count,
+    %{noreply, State#state{request_count = RequestCount + 1}};
+    {noreply, State#state{request_count = RequestCount + 1}};
+handle_info(timeout, #state{lsock = LSock} = State) ->
+    io:format("~p~n", ["tcp_message"]),
+    {ok, _Sock} = gen_tcp:accept(LSock),
     {noreply, State}.
-%handle_info(timeout, State) ->
-%    {ok, _Sock} = gen_tcp:accept(State
 
 terminate(_Reason, _State) ->
     ok.
