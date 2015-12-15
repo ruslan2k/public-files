@@ -44,7 +44,9 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info({udp, Client, _Ip, _Port, Msg}, State) ->
-    io:format("receive udp data ~p from ~p ip ~p Msg ~p~n", [Msg, Client, _Ip, Msg]),
+    [A1, A2 | _] = binary_to_list(Msg),
+    io:format("receive udp size ~p from ~p ip ~p~n", [byte_size(Msg), Client, _Ip]),
+    io:format("A1 ~p A2 ~p~n", [A1, A2]),
     {noreply, State}.
 
 terminate(_Reason, _State) ->
