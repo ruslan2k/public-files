@@ -3,11 +3,14 @@ FROM fedora
 RUN dnf -y install composer
 
 RUN dnf -y install \
-  screen \
-  tmux \
-  make \
-  vim \
-  git
+    procps-ng \
+    psmisc \
+    screen \
+    tmux \
+    time \
+    make \
+    vim \
+    git
 
 RUN dnf -y install \
   php-pecl-yaml \
