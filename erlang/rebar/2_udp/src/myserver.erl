@@ -1,9 +1,11 @@
 -module(myserver).
 -behaviour(gen_server).
+
 -define(SERVER, ?MODULE).
 -define(DEF_PORT, 2345).
+-define(DEF_FILE, "/tmp/File.bin").
 
--record(state, {udp_sock, counter = 0}).
+-record(state, {udp_sock, io_device, counter = 0}).
 
 %% ------------------------------------------------------------------
 %% API Function Exports
@@ -22,19 +24,20 @@
 %% API Function Definitions
 %% ------------------------------------------------------------------
 
-start_link(Port) ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
+start_link(Port, FileName) ->
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [Port, FileName], []).
 
 start_link() ->
-    start_link(?DEF_PORT).
+    start_link(?DEF_PORT, ?DEF_FILE).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 
-init([Port]) ->
+init([Port, FileName]) ->
     {ok, Socket} = gen_udp:open(Port, [binary]),
-    State = #state{udp_sock = Socket},
+    {ok, IoDevice} = file:open(FileName, [write, binary]),
+    State = #state{udp_sock = Socket, io_device = IoDevice},
     {ok, State}.
 
 handle_call(_Request, _From, State) ->
@@ -45,6 +48,8 @@ handle_cast(_Msg, State) ->
 
 handle_info({udp, Client, _Ip, _Port, Msg}, State) ->
     [A1, A2 | _] = binary_to_list(Msg),
+    IoDevice = State#state.io_device,
+    ok = file:write(IoDevice, Msg),
     io:format("receive udp size ~p from ~p ip ~p~n", [byte_size(Msg), Client, _Ip]),
     io:format("A1 ~p A2 ~p~n", [A1, A2]),
     {noreply, State}.
@@ -58,4 +63,3 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
-
