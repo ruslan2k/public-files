@@ -36,6 +36,7 @@ start_link() ->
 
 init([Port, FileName]) ->
     {ok, Socket} = gen_udp:open(Port, [binary]),
+    io:format("Socket[~p]~n", [Socket]),
     {ok, IoDevice} = file:open(FileName, [write, binary]),
     State = #state{udp_sock = Socket, io_device = IoDevice},
     {ok, State}.
@@ -46,12 +47,13 @@ handle_call(_Request, _From, State) ->
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
-handle_info({udp, Client, _Ip, _Port, Msg}, State) ->
+handle_info({udp, Socket, _Ip, _Port, Msg}, State) ->
     [A1, A2 | _] = binary_to_list(Msg),
     IoDevice = State#state.io_device,
     ok = file:write(IoDevice, Msg),
-    io:format("receive udp size ~p from ~p ip ~p~n", [byte_size(Msg), Client, _Ip]),
+    io:format("receive udp size[~p] Socket[~p] ip[~p] port[~p]~n", [byte_size(Msg), Socket, _Ip, _Port]),
     io:format("A1 ~p A2 ~p~n", [A1, A2]),
+    io:format("bye~n", []),
     {noreply, State}.
 
 terminate(_Reason, _State) ->
