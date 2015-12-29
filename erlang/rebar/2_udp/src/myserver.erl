@@ -52,6 +52,7 @@ handle_info({udp, Socket, _Ip, _Port, Msg}, State) ->
     IoDevice = State#state.io_device,
     ok = file:write(IoDevice, Msg),
     io:format("receive udp size[~p] Socket[~p] ip[~p] port[~p]~n", [byte_size(Msg), Socket, _Ip, _Port]),
+    ok = gen_udp:send(Socket, _Ip, _Port, Msg),
     io:format("A1 ~p A2 ~p~n", [A1, A2]),
     io:format("bye~n", []),
     {noreply, State}.
