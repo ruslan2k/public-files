@@ -11,7 +11,7 @@ start(_Type, _Args) ->
             {"/:model", model_handler, []}
         ]}
     ]),
-    cowboy:start_http(my_http_listener, 100, [{port, 8080}],
+    cowboy:start_http(my_http_listener, 5, [{port, 8080}],
         [{env, [{dispatch, Dispatch}]}]
     ),
     hello_erlang_sup:start_link().
