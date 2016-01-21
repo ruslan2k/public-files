@@ -5,4 +5,9 @@ RUN yum -y install \
     yum-plugin-fastestmirror \
     deltarpm
 #RUN yum -y update
-RUN yum -y install rpm-build
+RUN yum -y install \
+    rpm-build \
+    wget \
+    openssl \
+    initscripts \
+    libpcre
