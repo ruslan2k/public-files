@@ -9,5 +9,9 @@ RUN yum -y install \
     rpm-build \
     wget \
     openssl \
-    initscripts \
-    libpcre
+    libpcre \
+    openssl-devel \
+    zlib-devel \
+    pcre-devel
+
+RUN yum -y groupinstall 'Development Tools'
