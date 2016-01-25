@@ -12,6 +12,7 @@ RUN yum -y install \
     libpcre \
     openssl-devel \
     zlib-devel \
-    pcre-devel
+    pcre-devel \
+    vim-enhanced
 
 RUN yum -y groupinstall 'Development Tools'
