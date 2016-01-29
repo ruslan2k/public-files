@@ -1,45 +1,46 @@
+%% https://medium.com/@kansi/getting-started-with-otp-creating-psycho-families-b4f6ce01d1e4#.cq8oo7a1j
+
 -module(ch3).
 -behaviour(gen_server).
 
 -export([start_link/0]).
 
--export([alloc/1]).
+-export([alloc/0]).
 -export([free/1]).
 
 -export([init/1]).
 -export([handle_call/3]).
 -export([handle_cast/2]).
--export([handle_info/2]).
--export([terminate/2]).
 
 start_link() ->
     gen_server:start_link({local, ch3}, ch3, [], []).
 
-init(_Args) ->
-    {ok, #{channels => []}}.
-
-alloc(Channel) ->
-    gen_server:call(ch3, {alloc. Chanel}).
+alloc() ->
+    gen_server:call(ch3, alloc).
 
 free(Ch) ->
     gen_server:cast(ch3, {free, Ch}).
 
-handle_call({alloc, Ch}, _From, #{channels := Chs} = State) ->
-    Chs_new = [Ch | Chs],
-    {reply, ok, State#{channels => Chs_new}}.
+init(_Args) ->
+    {ok, channels()}.
 
-handle_cast({free, Ch}, #{channels := Chs} = State) ->
-    Chs2 = lists:filter(fun(X) ->
-                            if X == Ch -> false;
-                                true -> true
-                            end
-                        end, Chs),
-    {noreply, State#{channels => Chs2}}.
+handle_call(alloc, _From, Chs) ->
+    {Ch, Chs2} = alloc(Chs),
+    {reply, Ch, Chs2}.
 
-handle_info(_Info, State) ->
-    {noreply, State}.
+handle_cast({free, Ch}, Chs) ->
+    Chs2 = free(Ch, Chs),
+    {noreply, Chs2}.
 
-terminate(_Reason, _State) ->
-    ok.
+%%% Internal
 
-code_change(_OldVersion, Library, _Extra) -> {ok, Library}.
+channels() ->
+    [ch1, ch2, ch3].
+
+alloc([Channel|Channels]) ->
+    {Channel, Channels};
+alloc([]) ->
+    false.
+
+free(Channel, Channels) ->
+    [Channel | Channels].
