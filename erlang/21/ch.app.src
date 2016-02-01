@@ -1,0 +1,13 @@
+{application, ch_app,
+ [
+  {description, "Channel allocator"},
+  {vsn, "1"},
+  {registered, [ch3]},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  sasl
+                 ]},
+  {modules, [ch_app, ch_sup, ch3]},
+  {mod, {ch_app, []}}
+]}.
