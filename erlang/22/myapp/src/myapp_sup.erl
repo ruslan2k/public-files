@@ -24,5 +24,12 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
+    ChildSpecs = [#{id => ch3,
+                    start => {ch3, start_link, []},
+                    restart => permanent,
+                    shutdown => brutal_kill,
+                    type => worker,
+                    modules => [ch3]}],
+    {ok, { {one_for_one, 5, 10}, ChildSpecs} }.
+
 
