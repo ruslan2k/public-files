@@ -24,12 +24,11 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    ChildSpecs = [#{id => ch3,
-                    start => {ch3, start_link, []},
-                    restart => permanent,
-                    shutdown => brutal_kill,
-                    type => worker,
-                    modules => [ch3]}],
-    {ok, { {one_for_one, 5, 10}, ChildSpecs} }.
-
-
+    %% ChildSpecs = [#{id => ch3,
+    %%                 start => {ch3, start_link, []},
+    %%                 restart => permanent,
+    %%                 shutdown => brutal_kill,
+    %%                 type => worker,
+    %%                 modules => [ch3]}],
+    %% {ok, { {one_for_one, 5, 10}, ChildSpecs} }.
+    {ok, { {one_for_one, 5, 10}, []} }.
