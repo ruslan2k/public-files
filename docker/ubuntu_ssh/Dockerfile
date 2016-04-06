@@ -1,0 +1,14 @@
+FROM ubuntu:14.04
+MAINTAINER Ruslan Karachun <free.changer@gmail.com>
+
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+
+RUN mkdir /root/.ssh
+ADD id_rsa.pub /root/.ssh/authorized_keys
+RUN chmod 0700 /root/.ssh
+RUN chmod 0600 /root/.ssh/authorized_keys
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
