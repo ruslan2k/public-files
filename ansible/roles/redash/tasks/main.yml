@@ -1,0 +1,14 @@
+---
+
+#- name: Install something
+#  command: echo test
+
+- name: install Tools
+  apt: name={{ item }} state=present
+  with_items:
+  - python-pip
+  - python-dev
+  - nginx
+  - curl
+  - build-essential
+  - pwgen
