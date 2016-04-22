@@ -1,2 +1,2 @@
 [ubuntu]
-home.jkl.su ansible_port=22001 ansible_user=root
+home.jkl.su ansible_port=2201 ansible_user=root

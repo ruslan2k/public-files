@@ -1,5 +1,7 @@
+SHELL := /bin/bash
+
 redash:
-	ansible-playbook redash.yml -i hosts
+	time ansible-playbook redash.yml -i hosts
 
 default:
 	ansible -i hosts -m ping all

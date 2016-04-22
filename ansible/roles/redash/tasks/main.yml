@@ -1,10 +1,7 @@
 ---
 
-#- name: Install something
-#  command: echo test
-
 - name: install Tools
-  apt: name={{ item }} state=present
+  apt: name={{ item }}
   with_items:
   - python-pip
   - python-dev
@@ -12,3 +9,99 @@
   - curl
   - build-essential
   - pwgen
+  - python-apt
+  - aptitude
+  - libffi-dev
+  - libssl-dev
+  - libmysqlclient-dev
+  - freetds-dev
+
+- name: Install setuptools
+  pip: name=setuptools
+  with_items:
+  - setuptools
+  - psycopg2
+  - supervisor
+
+- name: Add user
+  user: name=redash
+
+- name: Install DB
+  apt: name={{ item }}
+  with_items:
+  - postgresql-server-dev-9.3
+  - postgresql-9.3
+
+- name: Get redis
+  get_url: url=http://archives.dotdeb.org/dists/wheezy/redis/2.8.19/binary-amd64/{{ item }} dest=/tmp/{{ item }}
+  with_items:
+  - redis-tools_2.8.19-1~dotdeb.1_amd64.deb
+  - redis-server_2.8.19-1~dotdeb.1_amd64.deb
+
+- name: install redis
+  apt: deb=/tmp/{{ item }}
+  with_items:
+  - redis-tools_2.8.19-1~dotdeb.1_amd64.deb
+  - redis-server_2.8.19-1~dotdeb.1_amd64.deb
+
+- name: Creat dir
+  file: name={{ item }} state=directory owner=redash
+  with_items:
+  - /opt/redash
+  - /opt/redash/logs
+  - /opt/redash/redash.{{ REDASH_VERSION }}
+  - /opt/redash/supervisord
+
+- name: Download configs
+  get_url: url={{ FILES_BASE_URL }}/{{ item.src }} dest={{ item.dest }}
+    mode={{ item.mode }}
+  with_items:
+  - src: supervisord.conf
+    dest: /opt/redash/supervisord/supervisord.conf
+    mode: 644
+  - src: redash_supervisord_init
+    dest: /etc/init.d/redash_supervisord
+    mode: 755
+  - src: nginx_redash_site
+    dest: /etc/nginx/sites-available/redash
+    mode: 644
+
+- name: Create site symlink
+  file: src=/etc/nginx/sites-available/redash
+    dest=/etc/nginx/sites-enabled/redash state=link
+
+- name: Remove default config
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Start services
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+  - redash_supervisord
+  - redis-server
+  - postgresql
+  - nginx
+
+- name: Get redash
+  get_url: url={{ LATEST_URL }} dest={{ REDASH_TARBALL }}
+
+- name: Unarchive redash
+  unarchive: src={{ REDASH_TARBALL }} dest=/opt/redash/redash.{{ REDASH_VERSION }} copy=no
+
+- name: Create symlink
+  file: src=/opt/redash/redash.{{ REDASH_VERSION }} dest=/opt/redash/current
+    state=link
+
+- name: Add .env
+  get_url: url={{ FILES_BASE_URL }}/env   dest=/opt/redash/.env.orig
+
+- name: Install requirements
+  pip: requirements=/opt/redash/current/{{ item }}
+  with_items:
+  - requirements.txt
+  - requirements_all_ds.txt
+
+#- name: Create DB
+#  postgresql_db: name=redash
+
+#- name: Create User
+#  postgresql_user: db=redash name=redash
