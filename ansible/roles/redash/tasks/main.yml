@@ -1,5 +1,8 @@
 ---
 
+- name: apt-get update
+  apt: update_cache=yes
+
 - name: install Tools
   apt: name={{ item }}
   with_items:
@@ -16,24 +19,26 @@
   - libmysqlclient-dev
   - freetds-dev
 
-- name: Install setuptools
-  pip: name=setuptools
+- name: Install python libs
+  pip: name={{ item }}
   with_items:
-  - setuptools
   - psycopg2
+  - setuptools
   - supervisor
 
 - name: Add user
   user: name=redash
 
-- name: Install DB
+- name: Install postgresql
   apt: name={{ item }}
   with_items:
   - postgresql-server-dev-9.3
   - postgresql-9.3
 
 - name: Get redis
-  get_url: url=http://archives.dotdeb.org/dists/wheezy/redis/2.8.19/binary-amd64/{{ item }} dest=/tmp/{{ item }}
+  get_url:
+    url=http://archives.dotdeb.org/dists/wheezy/redis/2.8.19/binary-amd64/{{ item }}
+    dest=/tmp/{{ item }}
   with_items:
   - redis-tools_2.8.19-1~dotdeb.1_amd64.deb
   - redis-server_2.8.19-1~dotdeb.1_amd64.deb
@@ -76,7 +81,6 @@
 - name: Start services
   service: name={{ item }} enabled=yes state=started
   with_items:
-  - redash_supervisord
   - redis-server
   - postgresql
   - nginx
@@ -92,7 +96,15 @@
     state=link
 
 - name: Add .env
-  get_url: url={{ FILES_BASE_URL }}/env   dest=/opt/redash/.env.orig
+  get_url: url={{ FILES_BASE_URL }}/env dest=/opt/redash/.env.orig
+    backup=yes
+
+- name: .env link
+  file: src=/opt/redash/.env.orig dest=/opt/redash/current/.env state=link
+
+- name: Copy new requirements
+  copy: src=requirements_all_ds.txt
+    dest=/opt/redash/current/requirements_all_ds.txt
 
 - name: Install requirements
   pip: requirements=/opt/redash/current/{{ item }}
@@ -100,8 +112,29 @@
   - requirements.txt
   - requirements_all_ds.txt
 
+- name: Install python libs
+  pip: name={{ item }} state=latest
+  with_items:
+  - celery
+  - redis
+
 #- name: Create DB
 #  postgresql_db: name=redash
-
 #- name: Create User
 #  postgresql_user: db=redash name=redash
+
+- name: Create DB
+  shell: "createuser redash --no-superuser --no-createdb --no-createrole >/root/db_created"
+  become_user: postgres
+  args:
+    creates: /root/db_created
+- name: Create user
+  become_user: postgres
+  shell: "createdb redash --owner=redash >/root/db_user_created"
+  args:
+    creates: /root/db_user_created
+
+- name: Start redash
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+  - redash_supervisord
