@@ -22,7 +22,6 @@
 - name: Install python libs
   pip: name={{ item }}
   with_items:
-  - psycopg2
   - setuptools
   - supervisor
 
@@ -118,19 +117,12 @@
   - celery
   - redis
 
-#- name: Create DB
-#  postgresql_db: name=redash
-#- name: Create User
-#  postgresql_user: db=redash name=redash
-
 - name: Create DB
-  shell: "createuser redash --no-superuser --no-createdb --no-createrole >/root/db_created"
-  become_user: postgres
+  shell: "sudo -u postgres createuser redash --no-superuser --no-createdb --no-createrole >/root/db_created"
   args:
     creates: /root/db_created
 - name: Create user
-  become_user: postgres
-  shell: "createdb redash --owner=redash >/root/db_user_created"
+  shell: "sudo -u postgres createdb redash --owner=redash >/root/db_user_created"
   args:
     creates: /root/db_user_created
 
