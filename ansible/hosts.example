@@ -1,0 +1,2 @@
+[debian]
+example.com ansible_port=2201 ansible_user=root
