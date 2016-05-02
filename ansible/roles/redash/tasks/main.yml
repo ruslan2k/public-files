@@ -1,5 +1,14 @@
 ---
 
+- name: test
+  debug: msg={{ LATEST_URL }}
+
+- name: Add PostgreSQL Apt Repository
+  copy: src=pgdg.list dest=/etc/apt/sources.list.d/pgdg.list
+
+- name: Add key
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
 - name: apt-get update
   apt: update_cache=yes
 
@@ -101,9 +110,9 @@
 - name: .env link
   file: src=/opt/redash/.env.orig dest=/opt/redash/current/.env state=link
 
-- name: Copy new requirements
-  copy: src=requirements_all_ds.txt
-    dest=/opt/redash/current/requirements_all_ds.txt
+#- name: Copy new requirements
+#  copy: src=requirements_all_ds.txt
+#    dest=/opt/redash/current/requirements_all_ds.txt
 
 - name: Install requirements
   pip: requirements=/opt/redash/current/{{ item }}
