@@ -8,6 +8,7 @@
 
 - name: Add key
   apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    validate_certs=False
 
 - name: apt-get update
   apt: update_cache=yes
@@ -113,6 +114,10 @@
 #- name: Copy new requirements
 #  copy: src=requirements_all_ds.txt
 #    dest=/opt/redash/current/requirements_all_ds.txt
+
+- name: Remove impyla
+  replace: dest=/opt/redash/current/requirements_all_ds.txt
+    regexp='^(impyla.*)' replace='#\1' backup=yes
 
 - name: Install requirements
   pip: requirements=/opt/redash/current/{{ item }}

@@ -2,7 +2,7 @@ FROM debian:7
 MAINTAINER Ruslan Karachun <free.changer@gmail.com>
 
 RUN apt-get update
-RUN apt-get install -y python
+RUN apt-get install -y python sudo
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 
