@@ -1,7 +1,8 @@
-URL = 0.0.0.0:8008
+URL = 127.0.0.1:8008
 
 default :
-	screen  -dmS adminer  php -S  ${URL}
+	#screen  -dmS adminer  php -S  ${URL}
+	php -S  ${URL}
 	@echo url: ${URL}
 
 
