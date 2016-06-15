@@ -13,7 +13,7 @@ app = flask.Flask(__name__)
 SCOPE = 'https://www.googleapis.com/auth/plus.login'
 SCOPE = 'https://www.googleapis.com/auth/plus.me'
 SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
-#SCOPE = 'email profile'
+SCOPE = 'email profile'
 REDIRECT_URI = 'http://home.jkl.su:5000/oauth2callback'
 
 

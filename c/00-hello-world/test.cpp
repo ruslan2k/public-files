@@ -8,4 +8,5 @@ unsigned int squarings (unsigned int x)
 
 TEST_CASE("Squaring are computed", "[squarings]") {
     REQUIRE( squarings(1) == 1);
+    REQUIRE( squarings(2) == 2);
 }
