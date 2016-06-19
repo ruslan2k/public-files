@@ -38,16 +38,8 @@ int main ()
     noecho();
 
     do {
-        //sleep(1);
-        //usleep(1000);
 
-        int * p_new_coord = movePoint(col, row);
-
-        mvprintw(row, col, " ");
-        col = p_new_coord[0];
-        row = p_new_coord[1];
-        mvprintw(0, 0, "r:%d c:%d  ", row, col);
-        mvprintw(row, col, "@");
+        printw("ch:%d\n", getch());
 
         refresh();
 
