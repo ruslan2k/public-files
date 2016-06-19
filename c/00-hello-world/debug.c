@@ -7,6 +7,7 @@
 #define DEF_DOWN 2
 #define DEF_RIGHT 3
 #define DEF_LEFT 4
+#define DEF_SPACE 32
 
 struct Shot {
     int col;
@@ -33,13 +34,14 @@ int main ()
     getmaxyx(stdscr, row, col);
     row = row / 2;
     col = col / 2;
+    col = row = 0;
     mvprintw(0, col, "pres cursor key");
     mvprintw(row, col, "@");
     noecho();
 
     do {
 
-        printw("ch:%d\n", getch());
+        printw("ch:%d ", getch());
 
         refresh();
 
@@ -59,8 +61,9 @@ int getDirection0 ()
 
 int getCommand ()
 {
-    //if (getch() == )
-    return 0;
+    if (getch() == DEF_SPACE) {
+        return DEF_SPACE;
+    }
 }
 
 int getDirection ()
