@@ -10,11 +10,11 @@
   </head>
 
   <body>
-    <div>
-      <button ng-click="refreshTodos()">Refresh</button>
-      <img ng-show="isLoading()" src="http://loadinggif.com/images/image-selection/32.gif"/>
-    </div>
     <div ng-controller="todoListCtrl">
+      <div>
+        <button ng-click="refreshTodos()">Refresh</button>
+        <img ng-show="isLoading()" src="http://loadinggif.com/images/image-selection/32.gif"/>
+      </div>
       <ul>
         <li ng-repeat="todo in todos">
           <span>{{todo.text}}</span>
