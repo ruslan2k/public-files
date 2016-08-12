@@ -10,6 +10,10 @@
   </head>
 
   <body>
+    <div>
+      <button ng-click="refreshTodos()">Refresh</button>
+      <img ng-show="isLoading()" src="http://loadinggif.com/images/image-selection/32.gif"/>
+    </div>
     <div ng-controller="todoListCtrl">
       <ul>
         <li ng-repeat="todo in todos">
