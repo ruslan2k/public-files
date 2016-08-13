@@ -1,7 +1,19 @@
-angular.module('todoApp', [])
+angular.module('todoApp', ['ngResource'])
   .controller('todoListCtrl', TodoListCtrl)
   .factory('todoAppApi', todoAppApi)
+  .factory('Iteme', Item)
+  .controller('ItemIndexCtrl', ItemIndexCtrl)
   .constant('apiUrl', '/api');
+
+function Item ($resource, apiUrl) {
+  return $resource(apiUrl + '/items/:1d');
+}
+
+function ItemIndexCtrl ($scope, Item) {
+  Item.query(function (data) {
+    $scope.items = data;
+  });
+}
 
 function TodoListCtrl ($scope, todoAppApi) {
   $scope.todos = [];
