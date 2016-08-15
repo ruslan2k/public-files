@@ -10,9 +10,13 @@ function Item ($resource, apiUrl) {
 }
 
 function ItemIndexCtrl ($scope, Item) {
-  Item.query(function (data) {
-    $scope.items = data;
-  });
+  $scope.items = [
+    {text: "a"},
+    {text: "b"},
+  ];
+  //Item.query(function (data) {
+  //  $scope.items = data;
+  //});
 }
 
 function TodoListCtrl ($scope, todoAppApi) {

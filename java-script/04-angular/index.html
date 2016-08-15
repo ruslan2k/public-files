@@ -11,6 +11,9 @@
   </head>
 
   <body>
+    <div ng-controller="ItemIndexCtrl">
+      <li ng-repeat="item in items">{{item.text}}</li>
+    </div>
     <div ng-controller="todoListCtrl">
       <div>
         <div ng-show="errorMessage != ''">{{errorMessage}}</div>
