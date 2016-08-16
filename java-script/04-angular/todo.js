@@ -1,7 +1,7 @@
 angular.module('todoApp', ['ngResource'])
   .controller('todoListCtrl', TodoListCtrl)
   .factory('todoAppApi', todoAppApi)
-  .factory('Iteme', Item)
+  .factory('Item', Item)
   .controller('ItemIndexCtrl', ItemIndexCtrl)
   .constant('apiUrl', '/api');
 
