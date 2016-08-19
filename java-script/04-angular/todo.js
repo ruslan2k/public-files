@@ -14,6 +14,10 @@ function ItemIndexCtrl ($scope, Item) {
     {text: "a"},
     {text: "b"},
   ];
+
+  var items = Item.query(function () {
+    console.log(items);
+  });
   //Item.query(function (data) {
   //  $scope.items = data;
   //});
