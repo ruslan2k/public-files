@@ -10,14 +10,16 @@ function Item ($resource, apiUrl) {
 }
 
 function ItemIndexCtrl ($scope, Item) {
-  $scope.items = [
-    {text: "a"},
-    {text: "b"},
-  ];
+  //$scope.items = [
+  //  {text: "a"},
+  //  {text: "b"},
+  //];
 
   var items = Item.query(function () {
     console.log(items);
   });
+
+  $scope.items = items;
   //Item.query(function (data) {
   //  $scope.items = data;
   //});
