@@ -1,6 +1,7 @@
 PORT:=8008
 
 express:
+	DEBUG=express:* node express.js
 
 node:
 	node node_modules/http-server/bin/http-server -a localhost -p ${PORT}
