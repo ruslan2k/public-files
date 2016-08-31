@@ -17,6 +17,17 @@ angular.module('project', ['ngRoute', 'firebase'])
     if (authObj.$getAuth()) {
       return $q.when(auth = authObj.$getAuth());
     }
-    // FIXME
-  }
+    var deferred = $q.defer();
+    authObj.$authAnonymously().then(function (authData) {
+      auth = authData;
+      deferred.resolve(authData);
+    });
+    return deferred.promise;
+  };
 })
+
+.service('Projects', function ($q, $firebase, fbRef, fbAuth, projectListValue) {
+  // FIXME
+})
+
+;
