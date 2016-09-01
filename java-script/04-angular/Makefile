@@ -1,5 +1,7 @@
-default:
-	php -S 0.0.0.0:8001
+PORT:=8008
+
+express:
+	DEBUG=express:* node express.js
 
 install:
-	npm install angular@1.5.7
+	npm install

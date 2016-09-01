@@ -2,15 +2,24 @@
 <html ng-app="todoApp">
   <head>
     <title>My Angular App</title>
+    <!--
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-    <!-- local
-    <script src="/node_modules/angular/angular.js"></script>
     -->
-    <script src="todo.js"></script>
+    <script src="/node_modules/angular/angular.js"></script>
+    <script src="/node_modules/angular-resource/angular-resource.js"></script>
+    <script src="/js/todo.js"></script>
   </head>
 
   <body>
+    <div ng-controller="ItemIndexCtrl">
+      <li ng-repeat="item in items">{{item.text}}</li>
+    </div>
     <div ng-controller="todoListCtrl">
+      <div>
+        <div ng-show="errorMessage != ''">{{errorMessage}}</div>
+        <button ng-click="refreshTodos()">Refresh</button>
+        <img ng-show="isLoading()" src="http://loadinggif.com/images/image-selection/32.gif"/>
+      </div>
       <ul>
         <li ng-repeat="todo in todos">
           <span>{{todo.text}}</span>
