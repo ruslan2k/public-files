@@ -14,7 +14,7 @@ output="OK - cpu iowait $io% |iowait=$io%"
 if [ "$#" -eq 1 ]; then
     disk=$1
     util=$(iostat -x -y -p $disk 1 2 | grep -P "$disk\b" | tail -1 | awk 'END{print $NF}')
-    output+=" disk_util=$util%"
+    output+=";;; $disk=$util%"
 fi
 
 echo $output
