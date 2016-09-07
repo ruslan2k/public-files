@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL:=/bin/bash
 
 redash:
 	time ansible-playbook redash.yml -i hosts --diff

@@ -3,6 +3,9 @@
 - name: test
   debug: msg={{ LATEST_URL }}
 
+- name: break
+  command: /bin/false
+
 - name: Add PostgreSQL Apt Repository
   copy: src=pgdg.list dest=/etc/apt/sources.list.d/pgdg.list
 
