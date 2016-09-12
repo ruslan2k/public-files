@@ -1,14 +1,19 @@
 <!doctype html>
 <html>
-  <body ng-app>
-    <p>OK</p>
+  <body ng-app="editor">
     <div>
       <label>Name</label>
       <input type="text" ng-model="yourName" placeholder="Enter a name here">
       <hr>
       <h1>Hello {{yourName}}!</h1>
     </div>
-
+    <div ng-controller="itemCtrl">
+      <ul>
+        <li ng-repeat="item in items">
+          <span>{{item.value}}</span>
+        </li>
+      </ul>
+    </div>
 
     <script src="node_modules/angular/angular.js"></script>
     <script src="node_modules/angular-route/angular-route.js"></script>
