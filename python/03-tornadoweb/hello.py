@@ -17,13 +17,18 @@ class MainHandler(tornado.web.RequestHandler):
 class TableHandler(tornado.web.RequestHandler):
     #@tornado.web.asynchronous
     def get(self):
-        rows = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
-        for r in rows:
-            self.write(dict({"table": r}))
+        tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
+        self.render("index.html", tables=tables)
+        #for r in rows:
+        #    self.write(dict({"table": r}))
+
+    def post(self):
+        self.write("POST")
 
 def make_app():
     return tornado.web.Application([
         (r"/", TableHandler),
+        (r"/_", TableHandler),
         (r'/(favicon.ico)', tornado.web.StaticFileHandler, {"path": ""}),
     ], debug=True)
 
