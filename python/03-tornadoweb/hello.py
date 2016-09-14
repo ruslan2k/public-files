@@ -1,6 +1,13 @@
+import os
 import tornado.ioloop
 import tornado.web
 import sqlite3
+
+settings = {
+    "node_modules": os.path.join(os.path.dirname(__file__), "node_modules"),
+}
+
+print(settings)
 
 conn = sqlite3.connect("./db.sq3")
 c = conn.cursor()
@@ -27,9 +34,10 @@ class TableHandler(tornado.web.RequestHandler):
 
 def make_app():
     return tornado.web.Application([
+        (r"/(node_modules/angular/angular.js)", tornado.web.StaticFileHandler, {"path": ""}),
+        (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""}),
+        #(r"/_", TableHandler),
         (r"/", TableHandler),
-        (r"/_", TableHandler),
-        (r'/(favicon.ico)', tornado.web.StaticFileHandler, {"path": ""}),
     ], debug=True)
 
 if __name__ == "__main__":
