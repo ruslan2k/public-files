@@ -3,26 +3,26 @@
 import psutil
 import pprint as pp
 
+DEF_ELEM = 3
 user_dict = {}
 all_mem = 0
 
 for pid in psutil.pids():
     p = psutil.Process(pid)
-    all_mem += p.memory_percent()
+    all_mem += p.memory_info().rss
     username = p.username()
     if username in user_dict:
         user_dict[username]["rss_sum"] += p.memory_info().rss
     else:
         user_dict[username] = {}
         user_dict[username]["rss_sum"] = p.memory_info().rss
-    print(p.username())
-    print(p.memory_percent())
-    print(p.memory_info())
-
 pp.pprint(user_dict)
 
-sorted(user_dict, key=lambda x: x["rss_sum"])
+rss_dict = {mem["rss_sum"]:user for user,mem in list(user_dict.items())}
+max_rss = ({rss:rss_dict[rss] for rss in sorted(rss_dict,reverse=True)[0:DEF_ELEM]})
 
-#print("all mem: {0}".format(all_mem))
-
-    
+pp.pprint(rss_dict)
+pp.pprint(max_rss)
+mem_str = "OK - all rss {0} |all_users={0}".format(all_mem)
+sss = ";;; ".join("{}={}".format(u, m) for m, u in max_rss.items())
+print("{0};;; {1}".format(mem_str, sss))
