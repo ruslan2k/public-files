@@ -27,6 +27,8 @@ class TableHandler(tornado.web.RequestHandler):
         rows = c.execute(q)
         table_names = [t[1] for t in tables]
         self.render("index.html", rows=rows, tables=table_names)
+        # FIXME
+        # PRAGMA table_info('user');
 
 
 class MainHandler(tornado.web.RequestHandler):
