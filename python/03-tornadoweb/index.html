@@ -4,19 +4,27 @@
 </head>
 <body>
 
-{% for table in tables %}
+<form method="post">
+  {% for table in tables %}
   <span>
     <a href="{{ table }}">[{{ table }}]</a>
   </span>
-{% end %}
+  {% end %}
+
+  New table: <input type="text">
+  <input type="submit" value="Create">
+</form>
+
 <hr/>
 {% if locals().get("rows", False) %}
 bla bla
 {% end %}
 
 
-  <script src="/node_modules/angular/angular.js"></script>
-  <script src="/node_modules/vue/dist/vue.js"></script>
+<script src="/node_modules/angular/angular.js"></script>
+<script src="/node_modules/vue/dist/vue.js"></script>
+<!--
   <script src="app.js"></script>
+-->
 </body>
 </html>

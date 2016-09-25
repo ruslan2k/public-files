@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import tornado.ioloop
 import tornado.web
@@ -39,11 +41,13 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("index.html", tables=table_names)
 
     def post(self):
+        print("POST")
         self.write("POST")
 
 def make_app():
     return tornado.web.Application([
         (r"/(node_modules/angular/angular.js)", tornado.web.StaticFileHandler, {"path": ""}),
+        (r"/(node_modules/vue/dist/vue.js)", tornado.web.StaticFileHandler, {"path": ""}),
         (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""}),
         (r"/", MainHandler),
         (r"/([^/]+)", TableHandler),
