@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import base64
 import os
+import re
+import sqlite3
 import tornado.ioloop
 import tornado.web
-import sqlite3
 
 settings = {
     "node_modules": os.path.join(os.path.dirname(__file__), "node_modules"),
@@ -38,10 +40,31 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
         table_names = [t[1] for t in tables]
-        self.render("index.html", tables=table_names)
+        if self.get_message():
+            message=base64.b64decode(self.get_message())
+        else:
+            message=None
+        self.clear_cookie("message")
+        self.render("index.html", tables=table_names, message=message)
+
+    def get_message(self):
+        message = self.get_cookie("message")
+        if message:
+            return message
+        return None
 
     def post(self):
         print("POST")
+        table_name = self.get_argument("table_name")
+        print(table_name)
+        result = re.match(r"^[a-z0-9_]+$", table_name)
+        if result:
+            self.redirect("/{0}".format(table_name))
+        else:
+            message = base64.b64encode("Bad table name")
+            self.set_cookie("message", message)
+            self.redirect("/")
+        print(result.groups())
         self.write("POST")
 
 def make_app():

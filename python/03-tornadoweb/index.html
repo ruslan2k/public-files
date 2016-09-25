@@ -4,6 +4,10 @@
 </head>
 <body>
 
+{% if message %}
+ {{ message }}
+{% end %}
+
 <form method="post">
   {% for table in tables %}
   <span>
@@ -11,7 +15,7 @@
   </span>
   {% end %}
 
-  New table: <input type="text">
+  New table: <input type="text" name="table_name">
   <input type="submit" value="Create">
 </form>
 
