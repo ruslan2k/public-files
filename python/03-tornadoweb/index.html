@@ -4,11 +4,9 @@
 </head>
 <body>
 
-{% if message %}
- {{ message }}
-{% end %}
-
 <form method="post">
+  <span><a href="/">[/]</a></span>
+
   {% for table in tables %}
   <span>
     <a href="{{ table }}">[{{ table }}]</a>

@@ -18,7 +18,7 @@ conn = sqlite3.connect("./db.sq3")
 c = conn.cursor()
 
 try:
-    c.execute("""CREATE TABLE user (id INT, name TEXT)""")
+    c.execute("""CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT)""")
 except sqlite3.OperationalError:
     print("user table already created")
 
@@ -45,7 +45,7 @@ class MainHandler(tornado.web.RequestHandler):
         else:
             message=None
         self.clear_cookie("message")
-        self.render("index.html", tables=table_names, message=message)
+        self.render("index.html", tables=table_names)
 
     def get_message(self):
         message = self.get_cookie("message")
@@ -59,6 +59,9 @@ class MainHandler(tornado.web.RequestHandler):
         print(table_name)
         result = re.match(r"^[a-z0-9_]+$", table_name)
         if result:
+            q = "CREATE TABLE '{0}' (id INTEGER PRIMARY KEY)".format(table_name)
+            print(q)
+            c.execute(q)
             self.redirect("/{0}".format(table_name))
         else:
             message = base64.b64encode("Bad table name")
