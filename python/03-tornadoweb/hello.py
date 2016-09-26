@@ -74,6 +74,7 @@ def make_app():
     return tornado.web.Application([
         (r"/(node_modules/angular/angular.js)", tornado.web.StaticFileHandler, {"path": ""}),
         (r"/(node_modules/vue/dist/vue.js)", tornado.web.StaticFileHandler, {"path": ""}),
+        (r"/(js/app.js)", tornado.web.StaticFileHandler, {"path": ""}),
         (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""}),
         (r"/", MainHandler),
         (r"/([^/]+)", TableHandler),

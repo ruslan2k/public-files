@@ -4,18 +4,21 @@
 </head>
 <body>
 
-<form method="post">
-  <span><a href="/">[/]</a></span>
+<div ng-app="dbEditor">
+  <form method="post">
+    <span><a href="/">[/]</a></span>
+  
+    {% for table in tables %}
+    <span>
+      <a href="{{ table }}">[{{ table }}]</a>
+    </span>
+    {% end %}
+  
+    New table: <input type="text" name="table_name" placeholder="add table_name">
+    <input type="submit" value="Create">
+  </form>
+</div>
 
-  {% for table in tables %}
-  <span>
-    <a href="{{ table }}">[{{ table }}]</a>
-  </span>
-  {% end %}
-
-  New table: <input type="text" name="table_name">
-  <input type="submit" value="Create">
-</form>
 
 <hr/>
 {% if locals().get("rows", False) %}
@@ -24,9 +27,9 @@ bla bla
 
 
 <script src="/node_modules/angular/angular.js"></script>
-<script src="/node_modules/vue/dist/vue.js"></script>
 <!--
-  <script src="app.js"></script>
+<script src="/node_modules/vue/dist/vue.js"></script>
 -->
+<script src="/js/app.js"></script>
 </body>
 </html>
