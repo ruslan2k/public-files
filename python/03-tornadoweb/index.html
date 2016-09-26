@@ -1,11 +1,11 @@
 <!doctype html>
-<html>
+<html ng-app="dbEditor">
 <head>
 </head>
 <body>
 
-<div ng-app="dbEditor">
-  <form method="post">
+<div ng-controller="tablesListController as tablesList">
+  <form method="post" ng-submit="tablesList.addTable()">
     <span><a href="/">[/]</a></span>
   
     {% for table in tables %}
@@ -14,8 +14,9 @@
     </span>
     {% end %}
   
-    New table: <input type="text" name="table_name" placeholder="add table_name">
-    <input type="submit" value="Create">
+    New table:
+      <input type="text" name="table_name" ng-model="tablesList.tableName" placeholder="add table_name">
+    <input type="submit" value="add">
   </form>
 </div>
 
