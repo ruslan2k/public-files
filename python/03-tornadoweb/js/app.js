@@ -7,6 +7,7 @@ angular.module('dbEditor', ['ngResource'])
     tablesList.addTable = function () {
       console.log(tablesList.tableName);
       $scope.table = new Table();
+      $scope.table.name = tablesList.tableName;
       Table.save($scope.table);
     };
 

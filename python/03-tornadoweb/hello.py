@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 import base64
+import json
 import os
+import pprint
 import re
 import sqlite3
 import tornado.ioloop
@@ -36,6 +38,16 @@ class TableHandler(tornado.web.RequestHandler):
 
 
 class MainHandler(tornado.web.RequestHandler):
+
+    def prepare(self):
+        if self.request.headers["Content-Type"].startswith("application/json"):
+            print("")
+            pprint.pprint(self.request.body)
+            print("")
+            self.json_args = tornado.escape.json_decode(self.request.body)
+        else:
+            self.json_args = None
+
     #@tornado.web.asynchronous
     def get(self):
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
@@ -55,6 +67,8 @@ class MainHandler(tornado.web.RequestHandler):
 
     def post(self):
         print("POST")
+        pprint.pprint(self.json_args)
+        #pprint.pprint(self.request.headers.get("Content-Type"))
         table_name = self.get_argument("table_name")
         print(table_name)
         result = re.match(r"^[a-z0-9_]+$", table_name)
