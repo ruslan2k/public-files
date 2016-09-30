@@ -22,10 +22,16 @@
 
 
 <hr/>
+<div>
+<p>rows</p>
 {% if locals().get("rows", False) %}
+  {% for row in rows %}
+    {{ row }}
+  {% end %}
+{% else %}
 bla bla
 {% end %}
-
+</div>
 
 <script src="/node_modules/angular/angular.js"></script>
 <script src="/node_modules/angular-resource/angular-resource.js"></script>

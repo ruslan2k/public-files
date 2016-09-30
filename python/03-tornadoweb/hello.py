@@ -28,9 +28,12 @@ class TableHandler(tornado.web.RequestHandler):
     def get(self, table_name):
         print(table_name)
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
-        q = """ SELECT * FROM {0} """.format(table_name)
-        print(q)
-        rows = c.execute(q)
+        q1_columns = """ PRAGMA table_info({0}) """.format(table_name)
+        for column in c.execute(q1_columns):
+            print(column)
+        q2_rows = """ SELECT * FROM {0} """.format(table_name)
+        print(q2_rows)
+        rows = c.execute(q2_rows)
         table_names = [t[1] for t in tables]
         self.render("index.html", rows=rows, tables=table_names)
         # FIXME
