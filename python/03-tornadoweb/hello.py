@@ -29,8 +29,11 @@ class TableHandler(tornado.web.RequestHandler):
         print(table_name)
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
         q1_columns = """ PRAGMA table_info({0}) """.format(table_name)
+        columns = []
         for column in c.execute(q1_columns):
+            columns.append({"name": column[1], "type": column[2]})
             print(column)
+        pprint.pprint(columns)
         q2_rows = """ SELECT * FROM {0} """.format(table_name)
         print(q2_rows)
         rows = c.execute(q2_rows)
@@ -43,13 +46,13 @@ class TableHandler(tornado.web.RequestHandler):
 class MainHandler(tornado.web.RequestHandler):
 
     def prepare(self):
-        if self.request.headers["Content-Type"].startswith("application/json"):
-            print("")
-            pprint.pprint(self.request.body)
-            print("")
-            self.json_args = tornado.escape.json_decode(self.request.body)
-        else:
-            self.json_args = None
+        if  "Content-Type" in self.request.headers:
+            content_type = self.request.headers["Content-Type"]
+            if content_type.startswith("application/json"):
+                pprint.pprint(self.request.body)
+                self.json_args = tornado.escape.json_decode(self.request.body)
+            else:
+                self.json_args = None
 
     #@tornado.web.asynchronous
     def get(self):
@@ -71,7 +74,6 @@ class MainHandler(tornado.web.RequestHandler):
     def post(self):
         print("POST")
         pprint.pprint(self.json_args)
-        #pprint.pprint(self.request.headers.get("Content-Type"))
         table_name = self.get_argument("table_name")
         print(table_name)
         result = re.match(r"^[a-z0-9_]+$", table_name)

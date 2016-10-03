@@ -6,11 +6,11 @@
 
 <div ng-controller="tablesListController as tablesList">
   <form method="post" ng-submit="tablesList.addTable()">
-    <span><a href="/">[/]</a></span>
+    [<span><a href="/">home: /</a></span>]
   
     {% for table in tables %}
     <span>
-      <a href="{{ table }}">[{{ table }}]</a>
+      [<a href="{{ table }}">{{ table }}</a>]
     </span>
     {% end %}
   
