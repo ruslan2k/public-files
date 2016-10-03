@@ -1,7 +1,5 @@
 <!doctype html>
 <html ng-app="dbEditor">
-<head>
-</head>
 <body>
 
 <div ng-controller="tablesListController as tablesList">
@@ -23,14 +21,47 @@
 
 <hr/>
 <div>
+
+{% try %}
+  <table>
+    <tr>
+      {% for column in columns %}
+        <th>[{{ column["name"] }}]</th>
+      {% end %}
+      <td>
+        <form method="post">
+          Add Column: <input type="text" placeholder="column_name">
+          <input type="submit" value="add">
+        </form>
+      </td>
+    </tr>
+    <tr>
+      <form method="post">
+      {% for column in columns %}
+        <td>
+        {% if column["name"] != 'id' %}<input type="text">{% end %}
+        </td>
+      {% end %}
+        <td>
+          <input type="submit" value="+">
+        </td>
+      </form>
+    </tr>
+  </table>
+{% except NameError %}
+  No columns
+{% end %}
+
+<!--
 <p>rows</p>
 {% if locals().get("rows", False) %}
   {% for row in rows %}
     {{ row }}
   {% end %}
 {% else %}
-bla bla
+No rows
 {% end %}
+-->
 </div>
 
 <script src="/node_modules/angular/angular.js"></script>

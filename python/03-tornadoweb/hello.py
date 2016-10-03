@@ -2,6 +2,7 @@
 
 import base64
 import json
+import model
 import os
 import pprint
 import re
@@ -16,31 +17,27 @@ settings = {
 DEF_PORT=8888
 print(settings)
 
-conn = sqlite3.connect("./db.sq3")
-c = conn.cursor()
-
-try:
-    c.execute("""CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT)""")
-except sqlite3.OperationalError:
-    print("user table already created")
+c = model.c
 
 class TableHandler(tornado.web.RequestHandler):
     def get(self, table_name):
         print(table_name)
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
         q1_columns = """ PRAGMA table_info({0}) """.format(table_name)
-        columns = []
-        for column in c.execute(q1_columns):
-            columns.append({"name": column[1], "type": column[2]})
-            print(column)
-        pprint.pprint(columns)
+        columns = model.getColumns(table_name)
         q2_rows = """ SELECT * FROM {0} """.format(table_name)
         print(q2_rows)
         rows = c.execute(q2_rows)
         table_names = [t[1] for t in tables]
-        self.render("index.html", rows=rows, tables=table_names)
-        # FIXME
-        # PRAGMA table_info('user');
+        self.render("index.html", table_name=table_name,
+                rows=rows, tables=table_names, columns=columns)
+
+    def post(self, table_name):
+        pprint.pprint("POST {0}".format(table_name))
+        for k in self.request.arguments:
+            pprint.pprint(k)
+            #pprint.pprint(self.get_argument(k))
+        #pprint.pprint(self.request.arguments)
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -75,7 +72,6 @@ class MainHandler(tornado.web.RequestHandler):
         print("POST")
         pprint.pprint(self.json_args)
         table_name = self.get_argument("table_name")
-        print(table_name)
         result = re.match(r"^[a-z0-9_]+$", table_name)
         if result:
             q = "CREATE TABLE '{0}' (id INTEGER PRIMARY KEY)".format(table_name)
