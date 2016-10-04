@@ -21,23 +21,21 @@ c = model.c
 
 class TableHandler(tornado.web.RequestHandler):
     def get(self, table_name):
-        print(table_name)
         tables = c.execute(""" SELECT * FROM sqlite_master WHERE type='table' """)
         q1_columns = """ PRAGMA table_info({0}) """.format(table_name)
         columns = model.getColumns(table_name)
-        q2_rows = """ SELECT * FROM {0} """.format(table_name)
-        print(q2_rows)
-        rows = c.execute(q2_rows)
+        rows = model.getRows(table_name)
         table_names = [t[1] for t in tables]
         self.render("index.html", table_name=table_name,
                 rows=rows, tables=table_names, columns=columns)
 
     def post(self, table_name):
         pprint.pprint("POST {0}".format(table_name))
-        for k in self.request.arguments:
-            pprint.pprint(k)
-            #pprint.pprint(self.get_argument(k))
-        #pprint.pprint(self.request.arguments)
+        data = self.request.arguments
+        #for k in self.request.arguments:
+        #    data[k] = self.get_argument(k)
+        id = model.save(table_name, data)
+        self.redirect("/{0}".format(table_name))
 
 
 class MainHandler(tornado.web.RequestHandler):

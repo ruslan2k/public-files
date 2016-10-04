@@ -39,7 +39,8 @@
       <form method="post">
       {% for column in columns %}
         <td>
-        {% if column["name"] != 'id' %}<input type="text">{% end %}
+        {% if column["name"] != 'id' %}
+          <input type="text" name="{{ column['name'] }}">{% end %}
         </td>
       {% end %}
         <td>
@@ -47,20 +48,19 @@
         </td>
       </form>
     </tr>
+  {% for row in rows %}
+    <tr>
+    {% for column in columns %}
+      <td>{{ row[column["name"]] }}</td>
+    {% end %}
+    </tr>
+  {% end %}
   </table>
 {% except NameError %}
   No columns
 {% end %}
 
 <!--
-<p>rows</p>
-{% if locals().get("rows", False) %}
-  {% for row in rows %}
-    {{ row }}
-  {% end %}
-{% else %}
-No rows
-{% end %}
 -->
 </div>
 
