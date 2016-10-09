@@ -4,3 +4,6 @@ run: venv
 venv:
 	virtualenv -p python3 $@
 	./venv/bin/pip install -r requirements.txt
+
+shell:
+	./venv/bin/python mysite/manage.py shell
