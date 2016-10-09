@@ -7,3 +7,7 @@ venv:
 
 shell:
 	./venv/bin/python manage.py shell
+
+migrate:
+	./venv/bin/python manage.py makemigrations polls
+	./venv/bin/python manage.py migrate

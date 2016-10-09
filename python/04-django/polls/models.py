@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import Group
+
+#from my
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -9,3 +12,6 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
+class SecurityGroup(models.Model):
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
+    custom_field = models.CharField(max_length=191)

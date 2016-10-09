@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import SecurityGroup
+
 
 def index(request):
-    return HttpResponse("Hello world. polls index.")
+    groups = SecurityGroup.objects.all()
+    output = ', '.join([g.custom_field for g in groups])
+    return HttpResponse(output)
