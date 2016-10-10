@@ -11,3 +11,6 @@ shell:
 migrate:
 	./venv/bin/python manage.py makemigrations polls
 	./venv/bin/python manage.py migrate
+
+createadmin:
+	./venv/bin/python manage.py createsuperuser

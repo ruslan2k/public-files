@@ -15,3 +15,6 @@ class Choice(models.Model):
 class SecurityGroup(models.Model):
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
     custom_field = models.CharField(max_length=191)
+
+    def __str__(self):
+        return self.group.name
