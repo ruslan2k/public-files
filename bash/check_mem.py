@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Install to /usr/lib/nagios/plugins/check_mem.py
+"""
+
 import psutil
 import pprint as pp
 
