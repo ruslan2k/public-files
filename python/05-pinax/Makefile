@@ -1,12 +1,20 @@
-APP_NAME:=mysite
+APP_NAME=mysite
 
-info: ${APP_NAME}
-	echo 'http://pinaxproject.com/pinax/pinax_starter_projects/#getting-started'
+#info: ${APP_NAME}
+#	echo 'http://pinaxproject.com/pinax/pinax_starter_projects/#getting-started'
 
-${APP_NAME}: env/bin/pinax
+run: ${APP_NAME}
+	cd ${APP_NAME} && ./manage.py runserver
+
+${APP_NAME}: ./env/bin/pinax
 	./env/bin/pinax start account $@
+	cd ${APP_NAME} && chmod +x manage.py
+	./env/bin/pip install -r ${APP_NAME}/requirements.txt
+	cd ${APP_NAME} && ../env/bin/python ./manage.py migrate
+	cd ${APP_NAME} && ../env/bin/python ./manage.py loaddata sites
+	cd ${APP_NAME} && ../env/bin/python ./manage.py runserver
 
-env/bin/pinax: env
+./env/bin/pinax: env
 	./env/bin/pip install pinax-cli
 
 env:
