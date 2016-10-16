@@ -4,7 +4,7 @@ APP_NAME=mysite
 #	echo 'http://pinaxproject.com/pinax/pinax_starter_projects/#getting-started'
 
 run: ${APP_NAME}
-	cd ${APP_NAME} && ./manage.py runserver
+	cd ${APP_NAME} && ../env/bin/python ./manage.py runserver
 
 ${APP_NAME}: ./env/bin/pinax
 	./env/bin/pinax start account $@
