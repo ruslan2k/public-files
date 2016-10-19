@@ -17,3 +17,6 @@ ${APP_NAME}: ./env/bin/pinax
 
 env:
 	virtualenv -p python3 env
+
+makemigrations:
+	./env/bin/python ${APP_NAME}/manage.py makemigrations resources

@@ -1,6 +1,6 @@
 from django.db import models
-#from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+#from django.contrib.auth.models import Group
 
 
 class Resource(models.Model):
@@ -9,6 +9,15 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.name
+
+class Item(models.Model):
+    key = models.CharField(max_length=100)
+    val = models.CharField(max_length=255)
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.key
+
 
 #class Question(models.Model):
 #    question_text = models.CharField(max_length=200)
