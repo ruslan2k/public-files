@@ -1,0 +1,11 @@
+Resources :: index
+
+{% if resources %}
+  <ul>
+  {% for resource in resources %}
+    <li><a href="">{{ resource.name }}</a></li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>No resources are aviable.</p>
+{% endif %}
