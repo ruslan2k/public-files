@@ -1,11 +1,23 @@
+<html>
+<body>
+
 Resources :: index
+
+<form method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit"/>
+</form>
 
 {% if resources %}
   <ul>
   {% for resource in resources %}
-    <li><a href="">{{ resource.name }}</a></li>
+    <li><a href="/resources/{{ resource.id }}">{{ resource.name }}</a></li>
   {% endfor %}
   </ul>
 {% else %}
   <p>No resources are aviable.</p>
 {% endif %}
+
+</body>
+</html>

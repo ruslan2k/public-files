@@ -3,34 +3,29 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 
+from resources.models import Resource
+
 import pprint as pp
 
-#from .forms import GroupForm
+from .forms import ResourceForm
 #from django.contrib.auth.models import Group
 
 def index(request):
-    return HttpResponse("resources")
-    #all_groups = Group.objects.all()
-    #groups = [{'id':g.id, 'name':g.name} for g in all_groups]
-    #if request.method == 'POST':
-    #    # create a form instance and populate it with data from the request:
-    #    form = GroupForm(request.POST)
-    #    # check whether it's valid:
-    #    if form.is_valid():
-    #        pp.pprint(form.cleaned_data)
-    #        group = Group(name=form.cleaned_data['group_name'])
-    #        group.save()
-    #        return HttpResponseRedirect('/')
-    #else:
-    #    form = GroupForm()
-    #context = {'groups': groups, 'form': form}
-    #return render(request, 'polls/index.html', context)
+    resources = Resource.objects.all()
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ResourceForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            pp.pprint(form.cleaned_data)
+            resource = Resource( \
+                    name=form.cleaned_data["resource_name"],
+                    user_id=0
+            )
+            resource.save()
+            return HttpResponseRedirect('/resources')
+    else:
+        form = ResourceForm()
+    context = {"resources": resources, "form": form}
+    return render(request, "resources/index.html", context)
 
-def register(request):
-    pp.pprint(request)
-    form = """<form method="post">
-    <input type="text" name="login">
-    <input type="submit" value="login">
-    </form>
-    """
-    return HttpResponse(form)
