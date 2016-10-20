@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
@@ -28,4 +28,11 @@ def index(request):
         form = ResourceForm()
     context = {"resources": resources, "form": form}
     return render(request, "resources/index.html", context)
+
+
+def detail(request, resource_id):
+    resource = get_object_or_404(Resource, pk=resource_id)
+    context = {"resource": resource}
+    return render(request, "resources/detail.html", context)
+
 
