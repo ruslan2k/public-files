@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 
+from django.contrib.auth.decorators import login_required
+
 from resources.models import Resource
 
 import pprint as pp
@@ -10,6 +12,7 @@ import pprint as pp
 from .forms import ResourceForm
 #from django.contrib.auth.models import Group
 
+@login_required(login_url='/accounts/login/')
 def index(request):
     resources = Resource.objects.all()
     if request.method == 'POST':
