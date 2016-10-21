@@ -9,13 +9,11 @@ from resources.models import Resource, Item
 
 import pprint as pp
 
-from .forms import ResourceForm, ItemForm
+from .forms import ResourceForm, ItemForm, DelItemForm
 #from django.contrib.auth.models import Group
 
 @login_required(login_url='/accounts/login/')
 def index(request):
-    pp.pprint(request.user)
-    resources = request.user.resource_set.all()
     #resources = Resource.objects.all()
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -28,6 +26,7 @@ def index(request):
             return HttpResponseRedirect('/resources')
     else:
         form = ResourceForm()
+    resources = request.user.resource_set.all()
     context = {"resources": resources, "form": form}
     return render(request, "resources/index.html", context)
 
@@ -48,5 +47,20 @@ def detail(request, resource_id):
     return render(request, "resources/detail.html", context)
 
 
-def delete_item(request, item_id):
-    pass
+@login_required(login_url='/accounts/login/')
+def delete_item(request, resource_id, item_id):
+    resource = get_object_or_404(Resource, pk=resource_id)
+    item = get_object_or_404(Item, pk=item_id)
+    if resource.user_id != request.user.id or resource.id != item.resource_id:
+        raise Http404
+    if request.method == 'POST':
+        form = DelItemForm(request.POST)
+        if form.is_valid():
+            item.delete()
+            return HttpResponseRedirect("/resources/%s/" % resource_id)
+    else:
+        form = DelItemForm()
+    context = {"form": form}
+    return render(request, "items/delete.html", context)
+
+
