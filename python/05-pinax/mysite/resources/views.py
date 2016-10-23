@@ -8,9 +8,16 @@ from django.contrib.auth.decorators import login_required
 from resources.models import Resource, Item
 
 import pprint as pp
+import account.views
 
 from .forms import ResourceForm, ItemForm, DelItemForm
 #from django.contrib.auth.models import Group
+
+class LoginView(account.views.LoginView):
+    def after_login(self, form):
+        pp.pprint("test")
+        super(LoginView, self).after_login(form)
+
 
 @login_required(login_url='/accounts/login/')
 def index(request):
