@@ -14,6 +14,11 @@ from .forms import ResourceForm, ItemForm, DelItemForm
 
 @login_required(login_url='/accounts/login/')
 def index(request):
+    if not request.session.has_key('test'):
+        request.session['test'] = 10
+    else:
+        request.session['test'] = request.session['test'] + 1
+    pp.pprint(request.session['test'])
     #resources = Resource.objects.all()
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:

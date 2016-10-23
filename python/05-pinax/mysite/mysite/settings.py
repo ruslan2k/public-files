@@ -185,3 +185,11 @@ ACCOUNT_USE_AUTH_AUTHENTICATE = True
 AUTHENTICATION_BACKENDS = [
     "account.auth_backends.UsernameAuthenticationBackend",
 ]
+
+SESSION_ENGINE = 'encrypted_cookies'
+
+ENCRYPTED_COOKIE_KEYS = [
+    'qQifhQbX9-WNu5zDi3TYdcCJMv2fjyYiDzn83mvID9M=',
+]
+
+SESSION_COOKIE_SECURE = False
