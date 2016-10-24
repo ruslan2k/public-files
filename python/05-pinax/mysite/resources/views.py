@@ -13,10 +13,16 @@ import account.views
 from .forms import ResourceForm, ItemForm, DelItemForm
 #from django.contrib.auth.models import Group
 
+
 class LoginView(account.views.LoginView):
+
     def after_login(self, form):
-        pp.pprint("test")
+        pp.pprint("after_login")
+        #pp.pprint(form.cleaned_data["password"])
         super(LoginView, self).after_login(form)
+
+    def update_session(self, form):
+        pass
 
 
 @login_required(login_url='/accounts/login/')

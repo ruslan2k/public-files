@@ -10,6 +10,7 @@ class Resource(models.Model):
     def __str__(self):
         return self.name
 
+
 class Item(models.Model):
     key = models.CharField(max_length=100)
     val = models.CharField(max_length=255)
@@ -17,6 +18,14 @@ class Item(models.Model):
 
     def __str__(self):
         return self.key
+
+
+class SmartUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    salt = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.user.name
 
 
 #class Question(models.Model):
