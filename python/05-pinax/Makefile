@@ -20,3 +20,4 @@ env:
 
 makemigrations:
 	./env/bin/python ${APP_NAME}/manage.py makemigrations resources
+	./env/bin/python ${APP_NAME}/manage.py migrate
