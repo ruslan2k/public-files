@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 #from django.contrib.auth.models import Group
 
@@ -26,6 +28,20 @@ class SmartUser(models.Model):
 
     def __str__(self):
         return self.user.name
+
+
+#@receiver(post_save, sender=Resource)
+@receiver(post_save, sender=User)
+def model_post_save(sender, instance, *args, **kwargs):
+    smart_user = SmartUser(user=instance, salt='bla-bla-bla')
+    smart_user.save()
+    print('Saved: {}'.format(kwargs['instance'].__dict__))
+
+
+@receiver(pre_save, sender=User)
+@receiver(pre_save, sender=Resource)
+def model_pre_save(sender, **kwargs):
+    print('Saving: {}'.format(kwargs['instance'].__dict__))
 
 
 #class Question(models.Model):
