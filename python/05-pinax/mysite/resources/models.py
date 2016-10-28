@@ -3,7 +3,17 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 #from django.contrib.auth.models import Group
+from itertools import chain
 
+
+#def dump_args(fn):
+#    "This decorator dumps out the arguments passed to a function before calling it"
+#    from itertools import chain
+#    def wrapped(*v, **k):
+#        name = fn.__name__
+#        print("%s(%s)" % (name, ",".join(map(repr, chain(v, k.values())))))
+#        return fn(*v, **k)
+#    return wrapped
 
 class Resource(models.Model):
     name = models.CharField(max_length=100)
@@ -30,12 +40,15 @@ class SmartUser(models.Model):
         return self.user.name
 
 
-#@receiver(post_save, sender=Resource)
 @receiver(post_save, sender=User)
-def model_post_save(sender, instance, *args, **kwargs):
-    smart_user = SmartUser(user=instance, salt='bla-bla-bla')
-    smart_user.save()
-    print('Saved: {}'.format(kwargs['instance'].__dict__))
+def model_post_save(*args, **kwargs):
+    #smart_user = SmartUser(user=instance, salt='bla-bla-bla')
+    #smart_user.save()
+    print("model_post_save(args:{})".format(",".join(map(repr, args))))
+    print("model_post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
+    print("model_post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
+    #print('Saved: {}'.format(kwargs['instance'].__dict__))
+    #pass
 
 
 @receiver(pre_save, sender=User)
