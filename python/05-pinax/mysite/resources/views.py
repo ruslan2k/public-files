@@ -14,15 +14,32 @@ from .forms import ResourceForm, ItemForm, DelItemForm
 #from django.contrib.auth.models import Group
 
 
+class SignupView(account.views.SignupView):
+
+    def after_signup(self, form):
+        self.update_profile(form)
+        super(SignupView, self).after_signup(form)
+
+    def update_profile(self, form):
+        pp.pprint(self.created_user.__dict__)
+        #pp.pprint(self.created_user.smart_user)
+        pp.pprint(self.created_user.smartuser)
+        #smartuser = self.created_user.smartuser
+        #smartuser.salt = "bla-bla-bla"
+        #smartuser.save()
+
+
 class LoginView(account.views.LoginView):
 
     def after_login(self, form):
         pp.pprint("after_login")
         #pp.pprint(form.cleaned_data["password"])
+        self.update_session(form)
         super(LoginView, self).after_login(form)
 
     def update_session(self, form):
-        pass
+        smart_user = self.login_user
+        pp.pprint(smart_user)
 
 
 @login_required(login_url='/accounts/login/')
