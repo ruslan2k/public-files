@@ -1,0 +1,74 @@
+<!doctype html>
+<html ng-app="dbEditor">
+<body>
+
+<div ng-controller="tablesListController as tablesList">
+  <form method="post" ng-submit="tablesList.addTable()">
+    [<span><a href="/">home: /</a></span>]
+  
+    {% for table in tables %}
+    <span>
+      [<a href="{{ table }}">{{ table }}</a>]
+    </span>
+    {% end %}
+  
+    New table:
+      <input type="text" name="table_name" ng-model="tablesList.tableName" placeholder="add table_name">
+    <input type="submit" value="add">
+  </form>
+</div>
+
+
+<hr/>
+<div>
+
+{% try %}
+  <table>
+    <tr>
+      {% for column in columns %}
+        <th>[{{ column["name"] }}]</th>
+      {% end %}
+      <td>
+        <form method="post">
+          Add Column: <input type="text" placeholder="column_name">
+          <input type="submit" value="add">
+        </form>
+      </td>
+    </tr>
+    <tr>
+      <form method="post">
+      {% for column in columns %}
+        <td>
+        {% if column["name"] != 'id' %}
+          <input type="text" name="{{ column['name'] }}">{% end %}
+        </td>
+      {% end %}
+        <td>
+          <input type="submit" value="+">
+        </td>
+      </form>
+    </tr>
+  {% for row in rows %}
+    <tr>
+    {% for column in columns %}
+      <td>{{ row[column["name"]] }}</td>
+    {% end %}
+    </tr>
+  {% end %}
+  </table>
+{% except NameError %}
+  No columns
+{% end %}
+
+<!--
+-->
+</div>
+
+<script src="/node_modules/angular/angular.js"></script>
+<script src="/node_modules/angular-resource/angular-resource.js"></script>
+<!--
+<script src="/node_modules/vue/dist/vue.js"></script>
+-->
+<script src="/js/app.js"></script>
+</body>
+</html>
