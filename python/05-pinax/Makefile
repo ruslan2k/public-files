@@ -1,4 +1,5 @@
 APP_NAME=mysite
+GECKO_URL=https://github.com/mozilla/geckodriver/releases
 
 #info: ${APP_NAME}
 #	echo 'http://pinaxproject.com/pinax/pinax_starter_projects/#getting-started'
@@ -21,3 +22,10 @@ env:
 makemigrations:
 	./env/bin/python ${APP_NAME}/manage.py makemigrations resources
 	./env/bin/python ${APP_NAME}/manage.py migrate
+
+geckodriver:
+	geckodriver -h >/dev/null|| echo geckodriver not installed download ${GECKO_URL}
+	@echo geckodriver installed
+
+tests: geckodriver
+	cd ${APP_NAME} && ./manage.py test resources.tests.MySeleniumTests.test_login
