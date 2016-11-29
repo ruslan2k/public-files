@@ -7,25 +7,31 @@ GECKO_URL=https://github.com/mozilla/geckodriver/releases
 run: ${APP_NAME}
 	cd ${APP_NAME} && ../env/bin/python ./manage.py runserver 0.0.0.0:8000
 
-${APP_NAME}: ./env/bin/pinax
+${APP_NAME}:
 	cd ${APP_NAME} && chmod +x manage.py
-	./env/bin/pip install -r ${APP_NAME}/requirements.txt
 	cd ${APP_NAME} && ../env/bin/python ./manage.py migrate
 	cd ${APP_NAME} && ../env/bin/python ./manage.py loaddata sites
 
+new-install: ./env/bin/pinax
 ./env/bin/pinax: env
 	./env/bin/pip install pinax-cli
 
 env:
 	virtualenv -p python3 env
+	./env/bin/pip install -r ${APP_NAME}/requirements.txt
 
 makemigrations:
 	./env/bin/python ${APP_NAME}/manage.py makemigrations resources
+	./env/bin/python ${APP_NAME}/manage.py makemigrations
 	./env/bin/python ${APP_NAME}/manage.py migrate
+	./env/bin/python ${APP_NAME}/manage.py showmigrations  --list
 
 geckodriver:
 	geckodriver -h >/dev/null|| echo geckodriver not installed download ${GECKO_URL}
 	@echo geckodriver installed
 
-tests: geckodriver
+tests: geckodriver test_django test_selenium
+test_django:
+	cd ${APP_NAME} && ./manage.py test resources.tests.UserTest
+test_selenium:
 	cd ${APP_NAME} && ./manage.py test resources.tests.MySeleniumTests.test_login
