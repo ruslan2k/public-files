@@ -40,12 +40,12 @@ class Profile(models.Model):
         return self.user.name
 
 
-class SmartUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    salt = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.user.name
+# class SmartUser(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     salt = models.CharField(max_length=255)
+#
+#     def __str__(self):
+#         return self.user.name
 
 
 @receiver(post_save, sender=User)
