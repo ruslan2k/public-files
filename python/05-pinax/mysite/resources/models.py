@@ -40,18 +40,19 @@ class Profile(models.Model):
         return self.user.name
 
 
-#@receiver(post_save, sender=User)
-def model_post_save(*args, **kwargs):
-    print("model_post_save(args:{})".format(",".join(map(repr, args))))
-    print("model_post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
-    print("model_post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
-    #print('Saved: {}'.format(kwargs['instance'].__dict__))
-    #pass
+##@receiver(post_save, sender=User)
+#def model_post_save(*args, **kwargs):
+#    print("model_post_save(args:{})".format(",".join(map(repr, args))))
+#    print("model_post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
+#    print("model_post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
+#    #print('Saved: {}'.format(kwargs['instance'].__dict__))
+#    #pass
 
 
 #@receiver(pre_save, sender=Resource)
 @receiver(pre_save, sender=User)
 def model_pre_save(*args, **kwargs):
+    print('model_pre_save')
     print("(args:{})".format(",".join(map(repr, args))))
     print("(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
     print("(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))

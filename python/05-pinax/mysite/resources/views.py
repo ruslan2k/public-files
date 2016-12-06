@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 
 from django.contrib.auth.decorators import login_required
 
-from resources.models import Resource, Item
+from resources.models import Resource, Item, Profile
 
 import pprint as pp
 import account.views
@@ -21,9 +21,11 @@ class SignupView(account.views.SignupView):
         super(SignupView, self).after_signup(form)
 
     def update_profile(self, form):
+        pp.pprint("update_profile")
         pp.pprint(self.created_user.__dict__)
         #pp.pprint(self.created_user.smart_user)
         #pp.pprint(self.created_user.smartuser)
+        # profile = 
         #smartuser = self.created_user.smartuser
         #smartuser.salt = "bla-bla-bla"
         #smartuser.save()
