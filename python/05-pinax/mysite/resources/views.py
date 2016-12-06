@@ -23,7 +23,7 @@ class SignupView(account.views.SignupView):
     def update_profile(self, form):
         pp.pprint(self.created_user.__dict__)
         #pp.pprint(self.created_user.smart_user)
-        pp.pprint(self.created_user.smartuser)
+        #pp.pprint(self.created_user.smartuser)
         #smartuser = self.created_user.smartuser
         #smartuser.salt = "bla-bla-bla"
         #smartuser.save()

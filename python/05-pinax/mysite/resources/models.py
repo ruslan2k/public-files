@@ -40,18 +40,8 @@ class Profile(models.Model):
         return self.user.name
 
 
-# class SmartUser(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     salt = models.CharField(max_length=255)
-#
-#     def __str__(self):
-#         return self.user.name
-
-
-@receiver(post_save, sender=User)
+#@receiver(post_save, sender=User)
 def model_post_save(*args, **kwargs):
-    #smart_user = SmartUser(user=instance, salt='bla-bla-bla')
-    #smart_user.save()
     print("model_post_save(args:{})".format(",".join(map(repr, args))))
     print("model_post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
     print("model_post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
@@ -59,9 +49,12 @@ def model_post_save(*args, **kwargs):
     #pass
 
 
+#@receiver(pre_save, sender=Resource)
 @receiver(pre_save, sender=User)
-@receiver(pre_save, sender=Resource)
-def model_pre_save(sender, **kwargs):
-    print('Saving: {}'.format(kwargs['instance'].__dict__))
+def model_pre_save(*args, **kwargs):
+    print("(args:{})".format(",".join(map(repr, args))))
+    print("(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
+    print("(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
+    #print('Saving: {}'.format(kwargs['instance'].__dict__))
 
 
