@@ -29,7 +29,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element_by_xpath('//input[@value="Login"]').click()
 
 
-class FirsTest(TestCase):
+class FirstTest(TestCase):
     def test_test_test(self):
         self.assertEqual(404, 404)
 
@@ -42,3 +42,10 @@ class UserTest(TestCase):
         logged_in = self.client.login(username='test', password='test')
         self.assertEqual(logged_in, True)
         #pp.pprint(logged_in)
+
+    def test_login_2(self):
+        response = self.client.get('/account/login/')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/account/login/', {'username': 'Ztest', 'password': 'test'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/")

@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 #from django.contrib.auth.models import Group
 from itertools import chain
 
+import pprint as pp
+
 
 #def dump_args(fn):
 #    "This decorator dumps out the arguments passed to a function before calling it"
@@ -32,43 +34,39 @@ class Item(models.Model):
         return self.key
 
 
-class SmartUser(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     salt = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 @receiver(post_save, sender=User)
 def model_post_save(*args, **kwargs):
-    #smart_user = SmartUser(user=instance, salt='bla-bla-bla')
-    #smart_user.save()
-    print("model_post_save(args:{})".format(",".join(map(repr, args))))
-    print("model_post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
-    print("model_post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
+    print('post_save')
+    print("post_save(args:{})".format(",".join(map(repr, args))))
+    print("post_save(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
+    print("post_save(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
     #print('Saved: {}'.format(kwargs['instance'].__dict__))
     #pass
 
 
+@receiver(post_save, sender=User)
+def profile_post_save(instance, created, **kwargs):
+    pp.pprint(instance.__dict__)
+    Profile.objects.create(user=instance, salt='SALT')
+    #profile.salt = 'salt-salt-salt'
+    #profile.save()
+    
+
+#@receiver(pre_save, sender=Resource)
 @receiver(pre_save, sender=User)
-@receiver(pre_save, sender=Resource)
-def model_pre_save(sender, **kwargs):
-    print('Saving: {}'.format(kwargs['instance'].__dict__))
+def model_pre_save(*args, **kwargs):
+    print('pre_save')
+    print("(args:{})".format(",".join(map(repr, args))))
+    print("(kwargs.keys:{})".format(",".join(map(repr, kwargs.keys()))))
+    print("(kwargs.values:{})".format(",".join(map(repr, kwargs.values()))))
+    #print('Saving: {}'.format(kwargs['instance'].__dict__))
 
 
-#class Question(models.Model):
-#    question_text = models.CharField(max_length=200)
-#    pub_date = models.DateTimeField('date published')
-#
-#class Choice(models.Model):
-#    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-#    choice_text = models.CharField(max_length=200)
-#    votes = models.IntegerField(default=0)
-#
-#class SecurityGroup(models.Model):
-#    group = models.OneToOneField(Group, on_delete=models.CASCADE)
-#    custom_field = models.CharField(max_length=191)
-#
-#    def __str__(self):
-#        return self.group.name
