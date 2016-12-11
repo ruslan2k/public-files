@@ -6,3 +6,6 @@ env:
 mig:
 	env/bin/python manage.py makemigrations test2
 	env/bin/python manage.py migrate
+
+dump:
+	sqlite3 db.sqlite3 .dump

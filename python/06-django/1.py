@@ -1,5 +1,6 @@
 import django
 import os
+import random
 
 os.environ["DJANGO_SETTINGS_MODULE"]="mysite.settings"
 django.setup()
@@ -9,9 +10,11 @@ from test2.models import Profile
 
 print(Profile.objects.all())
 
-u1 = User(username='u1', email='u1@examle.com')
-u1.save()
+user_name = 'user{}'.format(random.randrange(10, 99))
+
+u = User(username=user_name, email='{}@examle.com'.format(user_name))
+u.save()
 
 
-p = Profile(random_salt='123', user=u1)
-p.save()
+#p = Profile(random_salt='123', user=u)
+#p.save()
