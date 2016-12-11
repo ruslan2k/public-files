@@ -1,3 +1,5 @@
+import random
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -13,5 +15,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     print('create_user_profile')
     print(instance)
     if created:
-        print('created')
-        #Profile.objects.create(user=instance)
+        salt=random.randrange(100,999)
+        print('created user, salt {}'.format(salt))
+        Profile.objects.create(user=instance, random_salt=salt)

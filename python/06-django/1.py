@@ -8,7 +8,7 @@ django.setup()
 from django.contrib.auth.models import User
 from test2.models import Profile
 
-print(Profile.objects.all())
+#print(Profile.objects.all())
 
 user_name = 'user{}'.format(random.randrange(10, 99))
 
