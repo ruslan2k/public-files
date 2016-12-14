@@ -1,4 +1,7 @@
+import base64
 import account.views
+import pprint as pp
+import os
 
 #from django.shortcuts import render
 
@@ -18,4 +21,12 @@ class SignupView(account.views.SignupView):
         profile = self.created_user.profile
         print('DEBUG profile.salt')
         print(profile.salt)
+        print('DEBUG self.request.session')
+        if 'secret' in self.request.session:
+            print('secret exists')
+        else:
+            print('secret NOT exists')
+            secret = base64.b64encode(os.urandom(4)).decode('ascii')
+            self.request.session['secret'] = secret
+        print(self.request.session['secret'])
 
