@@ -1,13 +1,18 @@
-import base64
 import account.views
+import base64
+import hashlib
 import pprint as pp
 import os
 
+
 #from django.shortcuts import render
 
-# TODO
-# http://blog.pinaxproject.com/2015/10/12/recap-september-pinax-hangout/
-# http://django-user-accounts.readthedocs.io/en/latest/usage.html
+
+def getSymKey_b64(password, salt):
+    bin_salt = base64.b64decode(salt)
+    bin_pass = hashlib.sha256(password.encode('utf-8')).digest()
+    bk = hashlib.pbkdf2_hmac('sha256', bin_pass, bin_salt, 100000)
+    return base64.b64encode(bk).decode('ascii')
 
 
 class SignupView(account.views.SignupView):
@@ -17,16 +22,13 @@ class SignupView(account.views.SignupView):
         super(SignupView, self).after_signup(form)
 
     def update_profile(self, form):
-        print('update_profile')
-        profile = self.created_user.profile
-        print('DEBUG profile.salt')
-        print(profile.salt)
-        print('DEBUG self.request.session')
-        if 'secret' in self.request.session:
+        password = form.cleaned_data['password']
+        salt = self.created_user.profile.salt
+        sym_key = getSymKey_b64(password, salt)
+        if 'sym_key' in self.request.session:
             print('secret exists')
         else:
             print('secret NOT exists')
-            secret = base64.b64encode(os.urandom(4)).decode('ascii')
-            self.request.session['secret'] = secret
-        print(self.request.session['secret'])
+            self.request.session['sym_key'] = sym_key
+        print(self.request.session['sym_key'])
 
