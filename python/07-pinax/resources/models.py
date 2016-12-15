@@ -12,6 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     salt = models.CharField(max_length=254, blank=True)
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     print('create_user_profile')
@@ -21,3 +22,20 @@ def create_user_profile(sender, instance, created, **kwargs):
         print('created user, salt {}'.format(salt))
         Profile.objects.create(user=instance, salt=salt)
 
+
+class Resource(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Item(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+    key = models.CharField(max_length=250)
+    val = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.key
+    

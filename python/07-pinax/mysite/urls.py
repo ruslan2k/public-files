@@ -15,7 +15,7 @@ urlpatterns = [
     url(r"^account/signup/$", SignupView.as_view(), name="account_signup"),
     url(r"^account/login/$", LoginView.as_view(), name="account_login"),
     url(r"^account/", include("account.urls")),
-    #url(r"^resources/", include("resources.urls")),
+    url(r"^resources/", include("resources.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
