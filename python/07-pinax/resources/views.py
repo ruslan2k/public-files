@@ -32,3 +32,13 @@ class SignupView(account.views.SignupView):
             self.request.session['sym_key'] = sym_key
         print(self.request.session['sym_key'])
 
+
+class LoginView(account.views.LoginView):
+
+    def after_login(self, form):
+        self.update_session(form)
+        super(LoginView, self).after_login(form)
+
+    def update_session(self, form):
+        print('update_session')
+
