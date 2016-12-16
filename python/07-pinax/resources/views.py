@@ -4,9 +4,12 @@ import hashlib
 import pprint as pp
 import os
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
-#from django.shortcuts import render
+from .models import Resource
+from .forms import ResourceForm, ItemForm, DelItemForm
 
 
 def getSymKey_b64(password, salt):
@@ -60,4 +63,29 @@ def test(request):
     else:
         response += 'sym_key - NOT exists'
     return HttpResponse(response)
+
+
+@login_required(login_url='/account/login/')
+def index(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ResourceForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            pp.pprint(form.cleaned_data)
+            resource = Resource(name=form.cleaned_data["resource_name"], user_id=request.user.id)
+            resource.save()
+            return HttpResponseRedirect('/resources')
+    else:
+        form = ResourceForm()
+    resources = request.user.resource_set.all()
+    #resources = Resource.objects.order_by('-id')
+    context = {"resources": resources, "form": form}
+    return render(request, "resources/index.html", context)
+
+
+
+
+def detail(request):
+    pass
 
