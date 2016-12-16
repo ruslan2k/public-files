@@ -5,10 +5,10 @@ import pprint as pp
 import os
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .models import Resource
+from .models import Resource, Item
 from .forms import ResourceForm, ItemForm, DelItemForm
 
 
@@ -79,13 +79,24 @@ def index(request):
     else:
         form = ResourceForm()
     resources = request.user.resource_set.all()
-    #resources = Resource.objects.order_by('-id')
     context = {"resources": resources, "form": form}
     return render(request, "resources/index.html", context)
 
 
+@login_required(login_url='/account/login/')
+def detail(request, resource_id):
+    resource = get_object_or_404(Resource, pk=resource_id)
+    if request.method == 'POST':
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            item = Item(key=form.cleaned_data["item_key"], val=form.cleaned_data["item_val"],
+                    resource_id=resource_id)
+            item.save()
+            return HttpResponseRedirect("/resources/%s/" % resource_id)
+    else:
+        form = ItemForm()
+    context = {"resource": resource, "form": form}
+    return render(request, "resources/detail.html", context)
 
-
-def detail(request):
+def delete_item(request):
     pass
-
