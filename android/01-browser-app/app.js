@@ -7,4 +7,14 @@ $(function() {
     $('#logger').toggle();
   });
 
+  console.olog = console.log;
+  console.log = function (message) {
+    console.olog(message);
+    $('#logger').append('<p>' + message + '</p');
+  }
+
+  $('#test').click(function () {
+    console.log('test');
+  });
+
 });
