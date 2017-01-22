@@ -1,7 +1,6 @@
 $(function() {
 
   function init (element) {
-    $(element).append('<div><button id="log">log</button></div>');
     $('<div/>', {
       id: 'logger',
       css: {
