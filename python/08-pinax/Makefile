@@ -1,6 +1,7 @@
-default:
+runserver: venv
 	$(MAKE) migrate
 	$(MAKE) loaddata
+	./manage.py runserver
 
 venv:
 	virtualenv -p python3 venv
@@ -11,7 +12,4 @@ migrate:
 
 loaddata:
 	./manage.py loaddata sites
-
-runserver: default
-	./manage.py runserver
 
