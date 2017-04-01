@@ -1,3 +1,6 @@
+
+
+import yaml
 import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
@@ -10,3 +13,8 @@ t = np.arange(0., 10., 0.1)
 plt.plot(t, t, 'r--', t, t**2, 'bs')
 plt.savefig(f_name)
 
+with open("config.yml", "r") as f:
+    config = yaml.load(f)
+
+for metric in config:
+    print(metric)
