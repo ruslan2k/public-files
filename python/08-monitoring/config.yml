@@ -4,4 +4,4 @@
   command: /usr/lib/nagios/plugins/check_disk -w 1 -c 2
 
 - name: check_load
-  command: /usr/lib/nagios/plugins/check_disk -w 1 -c 2
+  command: /usr/lib64/nagios/plugins/check_load -w 1 -c 2
