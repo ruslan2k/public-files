@@ -9,3 +9,6 @@ test: venv
 venv: requirements.txt
 	virtualenv -p python3 $@
 	$(PIP) install -r requirements.txt
+
+cron:
+	$(PYTHON) test.py	

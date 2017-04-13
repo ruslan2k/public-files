@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-#import commands
 import yaml
 import numpy as np
 import sqlite3
+import time
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-
-from subprocess import Popen, PIPE
+import subprocess
 
 f_name = "/tmp/a.png"
 
@@ -33,10 +32,17 @@ for metric in config:
 
 for metric in config:
     print(metric['name'])
-    #print(metric)
-    p = Popen((metric['command']).split(), stdout=PIPE)
-    output = p.communicate()[0]
+    p = subprocess.Popen((metric['command']).split(),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
     print(p.returncode)
-    print(output)
+    output_data = (out.decode('utf-8').split('|')[1]).strip()
+    print(out.decode('utf-8').split('|'))
+    sql = " INSERT INTO {} values(NULL, ?, ?) ".format(metric['name'])
+    print(sql)
+    c.execute(sql, (int(time.time()), output_data))
+    conn.commit()
+    
+
 
 
