@@ -10,6 +10,10 @@ import matplotlib.pyplot as plt
 import subprocess
 
 f_name = "/tmp/a.png"
+shm_dir = "/dev/shm/monitoring"
+
+if not os.path.exists(shm_dir):
+    os.makedirs(shm_dir)
 
 t = np.arange(0., 10., 0.1)
 #plt.plot(t, t, 'r--', t, t**2, 'bs', t, t**3, 'g^')

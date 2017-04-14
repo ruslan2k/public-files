@@ -12,3 +12,6 @@ venv: requirements.txt
 
 cron:
 	$(PYTHON) test.py	
+
+serv:
+	$(PYTHON) server.py
