@@ -26,8 +26,9 @@ c = conn.cursor()
 
 with open("config.yml", "r") as f:
     config = yaml.load(f)
+checks = config['checks']
 
-for metric in config:
+for metric in checks:
     c.execute("""
         CREATE TABLE IF NOT EXISTS {} (
         id INTEGER PRIMARY KEY ASC, 
@@ -35,7 +36,7 @@ for metric in config:
         value text )""".format(metric['name']))
     conn.commit()
 
-for metric in config:
+for metric in checks:
     print(metric['name'])
     p = subprocess.Popen((metric['command']).split(),
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
