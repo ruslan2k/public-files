@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello World!"
+    with open("/dev/shm/monitoring/localhost.json", "r") as f:
+        return f.read()
 
 @app.route("/favicon.ico")
 def favicon():

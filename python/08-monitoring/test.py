@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import os
+import json
 import yaml
 import numpy as np
 import sqlite3
+import socket
 import time
-import pprint as pp
+from pprint import pprint
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -13,7 +15,6 @@ import subprocess
 
 f_name = "/tmp/a.png"
 shm_dir = "/dev/shm/monitoring"
-client_dir = shm_dir +"/client"
 
 if not os.path.exists(shm_dir):
     os.makedirs(shm_dir)
@@ -28,9 +29,9 @@ c = conn.cursor()
 
 with open("config.yml", "r") as f:
     config = yaml.load(f)
-checks = config['checks']
+metrics = config['checks']
 
-for metric in checks:
+for metric in metrics:
     c.execute("""
         CREATE TABLE IF NOT EXISTS {} (
         id INTEGER PRIMARY KEY ASC, 
@@ -38,20 +39,28 @@ for metric in checks:
         value text )""".format(metric['name']))
     conn.commit()
 
-for metric in checks:
+checks = []
+for metric in metrics:
     output = {}
     output['name'] = metric['name']
     p = subprocess.Popen((metric['command']).split(),
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     output['ret_code'] = p.returncode
-    output['stdout'] = out.decode('utf-8')
+    output['stdout'] = "".join(out.decode("utf-8"))
     output_data = (out.decode('utf-8').split('|')[1]).strip()
     sql = " INSERT INTO {} values(NULL, ?, ?) ".format(metric['name'])
     c.execute(sql, (int(time.time()), output_data))
     conn.commit()
-    pp.pprint(output)
-    
+    checks.append(output)
 
+status = {
+    "hostname": socket.gethostname(),
+    "timestamp": int(time.time()),
+    "checks": checks,
+}
 
+# pprint(status)
+with open(shm_dir +"/localhost.json", "w") as outfile:
+    json.dump(status, outfile)
 
