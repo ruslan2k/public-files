@@ -5,6 +5,7 @@ import yaml
 import numpy as np
 import sqlite3
 import time
+import pprint as pp
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -12,6 +13,7 @@ import subprocess
 
 f_name = "/tmp/a.png"
 shm_dir = "/dev/shm/monitoring"
+client_dir = shm_dir +"/client"
 
 if not os.path.exists(shm_dir):
     os.makedirs(shm_dir)
@@ -37,17 +39,18 @@ for metric in checks:
     conn.commit()
 
 for metric in checks:
-    print(metric['name'])
+    output = {}
+    output['name'] = metric['name']
     p = subprocess.Popen((metric['command']).split(),
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    print(p.returncode)
+    output['ret_code'] = p.returncode
+    output['stdout'] = out.decode('utf-8')
     output_data = (out.decode('utf-8').split('|')[1]).strip()
-    print(out.decode('utf-8').split('|'))
     sql = " INSERT INTO {} values(NULL, ?, ?) ".format(metric['name'])
-    print(sql)
     c.execute(sql, (int(time.time()), output_data))
     conn.commit()
+    pp.pprint(output)
     
 
 
