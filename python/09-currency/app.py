@@ -13,7 +13,7 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 pp.pprint(os.environ.get("server"))
-url = os.environ.get("url")
+DEF_URL = os.environ.get("url")
 
 print(datetime.date.today())
 
@@ -25,7 +25,7 @@ print(month_ago.isoformat())
 def display(date):
     global url
     url_values = urllib.parse.urlencode({"onDate": date.isoformat(), "Periodicity": 0})
-    url = url.format(145, url_values)
+    url = DEF_URL.format(145, url_values)
     pp.pprint(url)
     response = urllib.request.urlopen(url)
     string = response.read().decode("utf-8")
