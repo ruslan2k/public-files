@@ -1,4 +1,6 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, render_template
+import json
+
 app = Flask(__name__)
 
 #app.add_url_rule('/favicon.ico',
@@ -7,7 +9,8 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     with open("/dev/shm/monitoring/localhost.json", "r") as f:
-        return f.read()
+        data = f.read()
+    return render_template('index.html', data=json.loads(data))
 
 @app.route("/favicon.ico")
 def favicon():

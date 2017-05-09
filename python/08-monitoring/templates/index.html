@@ -1,0 +1,24 @@
+<!DOCTYPE htm>
+<html lang="en">
+<head>
+  <title>monitoring</title>
+  <link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+
+{% if data %}
+  {% for check in data.checks %}
+    <span class="code{{ check.ret_code }}">
+      {{ check.name }}
+    <!--
+      {{ check }}
+    -->
+    </span>
+  {% endfor %}
+{% else %}
+  Hello
+{% endif %}
+
+</body>
+</html>
