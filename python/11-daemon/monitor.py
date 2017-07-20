@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 def playload():
-    #subprocess.Popen([config.DEF_PROG])
+    subprocess.Popen("wmic process get description,executablepath".split())
     subprocess.Popen(
             [config.DEF_PROG],
             stdout=subprocess.PIPE,
