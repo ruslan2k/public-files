@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-pp.pprint(os.environ.get("server"))
+#pp.pprint(os.environ.get("server"))
 DEF_URL = os.environ.get("url")
 
 print(datetime.date.today())
