@@ -6,6 +6,7 @@ import urllib
 import urllib.parse
 import urllib.request
 import pprint as pp
+import sqlite3
 import xml.etree.ElementTree as ET
 
 from os.path import join, dirname
@@ -14,24 +15,30 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-#pp.pprint(os.environ.get("server"))
 DEF_URL = os.environ.get("url")
 exchanger_url = os.environ.get("exchanger")
+
+now = datetime.datetime.utcnow()
 
 with urllib.request.urlopen(exchanger_url) as response:
     xml_page = response.read()
 
-#pp.pprint(xml_page)
 root = ET.fromstring(xml_page)
 
-#pp.pprint(root[1][0].tag)
-#pp.pprint(root[1][0].attrib)
-#pp.pprint(root[1][0].attrib["inoutrate"])
 print(root[0].attrib["direction"])
 inoutrate = root[1][0].attrib["inoutrate"]
-dot_inoutrate = re.sub(r",", ".", inoutrate)
+dot_inoutrate = float(re.sub(r",", ".", inoutrate))
 #pp.pprint(int(inoutrate))
-pp.pprint(float(dot_inoutrate))
+pp.pprint(dot_inoutrate)
+
+db = sqlite3.connect("db.sq3")
+c = db.cursor()
+c.execute("""CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY, inoutrate REAL, created_at DATE)""")
+
+c.execute("""INSERT INTO history (inoutrate, created_at) VALUES(?,?)""", (dot_inoutrate, now,))
+db.commit()
+
+db.close()
 
 #print(datetime.date.today())
 #
