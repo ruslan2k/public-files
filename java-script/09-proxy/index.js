@@ -6,9 +6,11 @@ console.log('Promise', typeof Promise);
 
 app.get('/*', (req, res, next) => {
   var newUrl = req.url.replace(/^\//, '');
+  console.log(newUrl)
   request(newUrl, function (error, response, body) {
     if (error) {
-      return res.status(500).send('Error', error);
+      console.log(error);
+      return res.status(500).send('Error');
     }
     res.header('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
