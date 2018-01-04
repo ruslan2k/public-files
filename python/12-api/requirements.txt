@@ -1,3 +1,4 @@
+bcrypt==3.1.4
 Flask==0.12.2
 flask-peewee==0.6.7
 Flask-Security==3.0.0
