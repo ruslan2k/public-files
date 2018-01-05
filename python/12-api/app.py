@@ -1,18 +1,24 @@
 from flask import Flask, render_template
 from flask_peewee.db import Database
 from peewee import *
+from flask_restful import Resource, Api
 from flask_security import Security, PeeweeUserDatastore, \
-    UserMixin, RoleMixin, login_required
+    UserMixin, RoleMixin, login_required, auth_token_required
 
 # Create app
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_PASSWORD_SALT'] = '12345678'
+app.config['WTF_CSRF_ENABLED'] = False
 app.config['DATABASE'] = {
     'name': 'examplpe.db',
     'engine': 'peewee.SqliteDatabase',
 }
+
+
+# Create Api
+api = Api(app)
 
 # Create database conection object
 db = Database(app)
@@ -36,6 +42,9 @@ class UserRoles(db.Model):
     name = property(lambda self: self.role.name)
     description = property(lambda self: self.role.description)
 
+class Device(db.Model):
+    pass
+
 # Setup Flask-Security
 user_datastore = PeeweeUserDatastore(db, User, Role, UserRoles)
 security = Security(app, user_datastore)
@@ -45,7 +54,28 @@ def create_user():
     for Model in (Role, User, UserRoles):
         Model.drop_table(fail_silently=True)
         Model.create_table(fail_silently=True)
-    user_datastore.create_user(email='matt@nobien.net', password='password')
+    user_datastore.create_user(email='ruslan', password='password')
+
+# Api
+class A(Resource):
+    @auth_token_required
+    def get(self):
+        return {'a': 1}
+
+class B(Resource):
+    @auth_token_required
+    def get(self):
+        return {'b': 2}
+
+class HelloWorld(Resource):
+    @login_required
+    @auth_token_required
+    def get(self):
+        return {'hello': 'world'}
+
+api.add_resource(A, '/a')
+api.add_resource(B, '/b')
+
 
 # Views
 @app.route('/')
@@ -54,8 +84,5 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-
-    print(app.config['SECURITY_PASSWORD_HASH'])
-    print(app.config['SECURITY_PASSWORD_SALT'])
     app.run()
 
