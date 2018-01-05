@@ -11,6 +11,7 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_PASSWORD_SALT'] = '12345678'
 app.config['WTF_CSRF_ENABLED'] = False
+app.config['SECURITY_REGISTERABLE'] = True
 app.config['DATABASE'] = {
     'name': 'examplpe.db',
     'engine': 'peewee.SqliteDatabase',
@@ -84,5 +85,5 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
 

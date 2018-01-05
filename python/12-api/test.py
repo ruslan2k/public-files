@@ -11,7 +11,7 @@ print(r.json())
 
 r = requests.get('http://127.0.0.1:5000/a', headers={'content-type': 'application/json'})
 
-print(r)
+print(r.text)
 
 r = requests.get('http://127.0.0.1:5000/a',
     headers={'authentication-token':authentication_token, 'content-type': 'application/json'})
