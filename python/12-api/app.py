@@ -65,17 +65,19 @@ class A(Resource):
 
 class B(Resource):
     @auth_token_required
+    @login_required
     def get(self):
         return {'b': 2}
 
-class HelloWorld(Resource):
-    @login_required
-    @auth_token_required
-    def get(self):
-        return {'hello': 'world'}
+class C(Resource):
+    mac = TextField()
+    def get(self, mac):
+        return {'mac': mac}
+
 
 api.add_resource(A, '/a')
 api.add_resource(B, '/b')
+api.add_resource(C, '/c/is-online/mac/<mac>')
 
 
 # Views
@@ -85,5 +87,6 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
+    #app.run(host='0.0.0.0')
 

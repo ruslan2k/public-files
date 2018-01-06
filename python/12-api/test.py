@@ -18,3 +18,5 @@ r = requests.get('http://127.0.0.1:5000/a',
 
 print(r.json())
 
+r = requests.get('http://localhost:5000/c/is-online/mac/12:34-56')
+print(r.json())
