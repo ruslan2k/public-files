@@ -77,7 +77,7 @@ class C(Resource):
 
 api.add_resource(A, '/a')
 api.add_resource(B, '/b')
-api.add_resource(C, '/c/is-online/mac/<mac>')
+api.add_resource(C, '/c/is-online/mac/<mac>', endpoint='abc')
 
 
 # Views
