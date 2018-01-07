@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_peewee.db import Database
 from peewee import *
 from flask_restful import Resource, Api
@@ -69,15 +69,23 @@ class B(Resource):
     def get(self):
         return {'b': 2}
 
-class C(Resource):
+class C(db.Model):
     mac = TextField()
+
+class C_API(Resource):
+    def post(self):
+        return request.get_json(force=True)
+
+class D_API(Resource):
     def get(self, mac):
         return {'mac': mac}
 
+api.add_resource(C_API, '/c/is-online/mac/<mac>', endpoint='c')
 
 api.add_resource(A, '/a')
 api.add_resource(B, '/b')
-api.add_resource(C, '/c/is-online/mac/<mac>', endpoint='abc')
+api.add_resource(C_API, '/c', endpoint='abc')
+api.add_resource(D_API, '/d/is-online/mac/<mac>', endpoint='d')
 
 
 # Views
