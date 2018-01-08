@@ -3,7 +3,7 @@ from flask_peewee.db import Database
 from peewee import *
 from flask_restful import Resource, Api
 from flask_security import Security, PeeweeUserDatastore, \
-    UserMixin, RoleMixin, login_required, auth_token_required
+    UserMixin, RoleMixin, login_required, auth_token_required, current_user
 
 # Create app
 app = Flask(__name__)
@@ -33,6 +33,8 @@ class User(db.Model, UserMixin):
     password = TextField()
     active = BooleanField(default=True)
     confirmed_at = DateTimeField(null=True)
+    def __str__(self):
+        return 'Email: {}, {}'.format(self.email, self.id)
 
 class UserRoles(db.Model):
     # Because peewee does not come with built-in many-to-many
@@ -50,18 +52,19 @@ class Device(db.Model):
 user_datastore = PeeweeUserDatastore(db, User, Role, UserRoles)
 security = Security(app, user_datastore)
 
-@app.before_first_request
-def create_user():
-    for Model in (Role, User, UserRoles):
-        Model.drop_table(fail_silently=True)
-        Model.create_table(fail_silently=True)
-    user_datastore.create_user(email='ruslan', password='password')
+#@app.before_first_request
+#def create_user():
+for Model in (Role, User, UserRoles):
+    #Model.drop_table(fail_silently=True)
+    Model.create_table(fail_silently=True)
+    #user_datastore.create_user(email='ruslan', password='password')
 
 # Api
 class A(Resource):
     @auth_token_required
     def get(self):
-        return {'a': 1}
+        return {'current_user': str(current_user)}
+        #return {'a': 1}
 
 class B(Resource):
     @auth_token_required
@@ -80,11 +83,10 @@ class D_API(Resource):
     def get(self, mac):
         return {'mac': mac}
 
-api.add_resource(C_API, '/c/is-online/mac/<mac>', endpoint='c')
 
 api.add_resource(A, '/a')
 api.add_resource(B, '/b')
-api.add_resource(C_API, '/c', endpoint='abc')
+api.add_resource(C_API, '/c', endpoint='c')
 api.add_resource(D_API, '/d/is-online/mac/<mac>', endpoint='d')
 
 
@@ -95,6 +97,6 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run()
-    #app.run(host='0.0.0.0')
+    #app.run()
+    app.run(host='0.0.0.0')
 
