@@ -81,6 +81,21 @@ class C_API(Resource):
 
 class D_API(Resource):
     def get(self, mac):
+        """
+        Fetch mac address as a parameter
+        ---
+        parameters:
+          - in: body
+            name: body
+            schema:
+              id: User
+              required:
+                - email
+                - name
+        responses:
+          201:
+            description: Mac echo
+        """
         return {'mac': mac}
 
 
@@ -97,6 +112,6 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    #app.run()
-    app.run(host='0.0.0.0')
+    app.run()
+    #app.run(host='0.0.0.0')
 
