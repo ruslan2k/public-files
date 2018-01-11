@@ -4,6 +4,8 @@ from peewee import *
 from flask_restful import Resource, Api
 from flask_security import Security, PeeweeUserDatastore, \
     UserMixin, RoleMixin, login_required, auth_token_required, current_user
+from bson import json_util
+import json
 
 # Create app
 app = Flask(__name__)
@@ -34,7 +36,7 @@ class User(db.Model, UserMixin):
     active = BooleanField(default=True)
     confirmed_at = DateTimeField(null=True)
     def __str__(self):
-        return 'Email: {}, {}'.format(self.email, self.id)
+        return 'Email:{}, id:{}'.format(self.email, self.id)
 
 class UserRoles(db.Model):
     # Because peewee does not come with built-in many-to-many
@@ -45,8 +47,15 @@ class UserRoles(db.Model):
     name = property(lambda self: self.role.name)
     description = property(lambda self: self.role.description)
 
+class C(db.Model):
+    #device = ForeignKeyField(Device)
+    mac = TextField()
+    name = TextField()
+    owner = ForeignKeyField(User, related_name='cams')
+
 class Device(db.Model):
-    pass
+    mac = TextField()
+    ip = TextField()
 
 # Setup Flask-Security
 user_datastore = PeeweeUserDatastore(db, User, Role, UserRoles)
@@ -54,7 +63,7 @@ security = Security(app, user_datastore)
 
 #@app.before_first_request
 #def create_user():
-for Model in (Role, User, UserRoles):
+for Model in (C, Role, User, UserRoles):
     #Model.drop_table(fail_silently=True)
     Model.create_table(fail_silently=True)
     #user_datastore.create_user(email='ruslan', password='password')
@@ -72,30 +81,24 @@ class B(Resource):
     def get(self):
         return {'b': 2}
 
-class C(db.Model):
+class D(db.Model):
     mac = TextField()
+    ip = TextField()
+
 
 class C_API(Resource):
+    @auth_token_required
+    def get(self):
+        users = User.select().dicts().get()
+        return json.dumps(users, default=json_util.default)
+    @auth_token_required
     def post(self):
-        return request.get_json(force=True)
+        req = request.get_json(force=True)
+        c = C.create(mac=req['mac'], name=req['name'], owner=current_user.id)
+        return {'id': c.id, 'c': str(c)}
 
 class D_API(Resource):
     def get(self, mac):
-        """
-        Fetch mac address as a parameter
-        ---
-        parameters:
-          - in: body
-            name: body
-            schema:
-              id: User
-              required:
-                - email
-                - name
-        responses:
-          201:
-            description: Mac echo
-        """
         return {'mac': mac}
 
 

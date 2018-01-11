@@ -7,6 +7,7 @@ venv:
 
 test:
 	venv/bin/python test.py
+	sqlite3 examplpe.db .dump
 
 doc: petstore-minimal.yaml
 	pretty-swag -i $< -o docs/index.html

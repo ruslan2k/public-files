@@ -26,7 +26,12 @@ r = requests.get('http://localhost:5000/d/is-online/mac/12:34-56')
 print(r.json())
 
 r = requests.post('http://localhost:5000/c',
-        data=json.dumps({'a':'A', 'b':'B'}),
-        headers={'content-type': 'application/json'})
+        data=json.dumps({'mac':'00:00:00', 'name':'Test'}),
+        headers={'authentication-token':authentication_token, 'content-type': 'application/json'})
+#print(r.text)
+print(r.json())
+
+r = requests.get('http://localhost:5000/c',
+        headers={'authentication-token':authentication_token, 'content-type': 'application/json'})
 print(r.json())
 
