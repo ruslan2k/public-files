@@ -8,3 +8,7 @@ venv:
 test:
 	venv/bin/python test.py
 
+doc: petstore-minimal.yaml
+	pretty-swag -i $< -o docs/index.html
+	cd docs && ../venv/bin/python -m http.server 8000
+
