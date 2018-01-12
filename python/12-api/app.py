@@ -64,9 +64,7 @@ security = Security(app, user_datastore)
 #@app.before_first_request
 #def create_user():
 for Model in (C, Role, User, UserRoles):
-    #Model.drop_table(fail_silently=True)
     Model.create_table(fail_silently=True)
-    #user_datastore.create_user(email='ruslan', password='password')
 
 # Api
 class A(Resource):
@@ -89,8 +87,9 @@ class D(db.Model):
 class C_API(Resource):
     @auth_token_required
     def get(self):
-        users = User.select().dicts().get()
-        return json.dumps(users, default=json_util.default)
+        cams = C.select().where(C.owner == current_user.id)
+        cams_out = [{'mac': cam.mac, 'name': cam.name} for cam in cams]
+        return json.dumps(cams_out, default=json_util.default)
     @auth_token_required
     def post(self):
         req = request.get_json(force=True)
