@@ -1,6 +1,33 @@
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import axios from 'axios'
 import $ from 'jquery'
 import './styles/app.css'
+
+class Timeline extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Timeline</h1>
+        <div>
+          <ul>
+            <li>0:00</li>
+            <li>1:00</li>
+            <li>...</li>
+            <li>24:00</li>
+          </ul>
+          <div id="t-r" class="time-range">
+            <span class="time-current"></span>
+          </div>
+          <div class="timeline">
+            <span id="s1" class="time-selection">s1</span>
+            <span id="s2" class="time-selection">s2</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
 
 var App = (function () {
   var MIN_IN_DAY = 1440
@@ -69,5 +96,10 @@ var App = (function () {
 }())
 
 $(function () {
-  App.init()
+  // App.init()
 })
+
+ReactDOM.render(
+  <Timeline />,
+  document.getElementById('timeline')
+)
