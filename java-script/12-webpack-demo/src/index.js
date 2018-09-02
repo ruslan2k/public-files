@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+import { createStore } from 'redux'
+import { Provider, connect } from 'react-redux'
 import axios from 'axios'
 import $ from 'jquery'
 import './styles/app.css'
+import DEF_DOMAIN from './config'
 
 class Timeline extends Component {
+  componentDidMount() {
+    this.props.fetchArchives()
+    console.log(DEF_DOMAIN)
+  }
+
   render() {
     return (
       <div>
@@ -28,6 +37,28 @@ class Timeline extends Component {
     )
   }
 }
+
+Timeline.propTypes = {
+  fetchArchives: PropTypes.func.isRequired
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchArchives: () => console.log('fetchArchives')
+  }
+}
+
+const VisibleTimeline = connect(
+  null,
+  mapDispatchToProps
+)(Timeline)
+
+const reducer = (state, action) => {
+  return state
+}
+
+var store = createStore(reducer)
+
 
 var App = (function () {
   var MIN_IN_DAY = 1440
@@ -69,7 +100,7 @@ var App = (function () {
       blockWidth = $('.time-range').width()
       minutesInPixel = MIN_IN_DAY / blockWidth
       console.log('minInPixel', minutesInPixel)
-      axios.get(DOMAIN + '/json')
+      axios.get(DEF_DOMAIN + '/json')
         .then(resp => {
           console.log(resp.data)
           console.log(createIntervals(resp.data.archives))
@@ -100,6 +131,8 @@ $(function () {
 })
 
 ReactDOM.render(
-  <Timeline />,
+  <Provider store={store}>
+    <VisibleTimeline />
+  </Provider>,
   document.getElementById('timeline')
 )
