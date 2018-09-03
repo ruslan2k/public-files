@@ -9,6 +9,7 @@ import './styles/app.css'
 import { DEF_DOMAIN } from './config'
 import { fetchArchives } from './actions'
 import { apiMiddleware } from './middleware'
+// import { LoginForm } from '@ruslan2k/react-components'
 
 class Timeline extends Component {
   componentDidMount() {
@@ -132,6 +133,7 @@ $(function () {
 
 ReactDOM.render(
   <Provider store={store}>
+    {/* <LoginForm /> */}
     <VisibleTimeline />
   </Provider>,
   document.getElementById('timeline')

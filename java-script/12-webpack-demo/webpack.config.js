@@ -1,6 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MyConfig = require('./src/config.json')
+
 
 module.exports = {
   entry: './src/index.js',
@@ -9,9 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
-    allowedHosts: [
-      'dev.aptinfo.net'
-    ],
+    allowedHosts: MyConfig.allowedHosts,
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     host: '0.0.0.0',
@@ -37,5 +37,8 @@ module.exports = {
         use: {loader: 'html-loader'}
       }
     ]
+  },
+  resolve: {
+    symlinks: false
   }
 };
