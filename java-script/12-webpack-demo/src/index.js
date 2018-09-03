@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider, connect } from 'react-redux'
 import axios from 'axios'
 import $ from 'jquery'
 import './styles/app.css'
-import DEF_DOMAIN from './config'
+import { DEF_DOMAIN } from './config'
+import { fetchArchives } from './actions'
+import { apiMiddleware } from './middleware'
 
 class Timeline extends Component {
   componentDidMount() {
     this.props.fetchArchives()
-    console.log(DEF_DOMAIN)
   }
 
   render() {
@@ -44,7 +45,7 @@ Timeline.propTypes = {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchArchives: () => console.log('fetchArchives')
+    fetchArchives: () => dispatch(fetchArchives())
   }
 }
 
@@ -57,8 +58,7 @@ const reducer = (state, action) => {
   return state
 }
 
-var store = createStore(reducer)
-
+var store = createStore(reducer, applyMiddleware(apiMiddleware))
 
 var App = (function () {
   var MIN_IN_DAY = 1440
