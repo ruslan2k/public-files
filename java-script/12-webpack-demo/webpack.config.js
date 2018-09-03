@@ -5,6 +5,7 @@ const MyConfig = require('./src/config.json')
 
 
 module.exports = {
+  mode: 'development',
   entry: './src/index.js',
   output: {
     filename: 'main.js',
