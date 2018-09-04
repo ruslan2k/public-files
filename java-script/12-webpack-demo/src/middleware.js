@@ -3,17 +3,12 @@ import { DEF_DOMAIN } from './config'
 import { API, SET_ARCHIVES } from './constants'
 import { setIntervals } from './actions'
 
-const MINUTES_IN_DAY = 1440
-//   var blockWidth = $('.time-range').width()
-//   var minutesInPixel = MIN_IN_DAY / blockWidth
-
 const createIntervals = (archives) => {
   var intervals = []
   var l = archives.length
   for (var i = 0, j = 0; i < l; i ++) {
     var archive = archives[i]
     var interval = {archives: []}
-    console.log(archive)
     if (! intervals[j]) {
       interval.start = archive.start_dt
       interval.stop = archive.stop_dt
@@ -54,7 +49,8 @@ const timelineMiddleware = ({ dispatch }) => next => action => {
   if (action.type !== SET_ARCHIVES) {
     return
   }
-  dispatch(setIntervals([1, 2, 3]))
+  const intervals = createIntervals(action.payload)
+  dispatch(setIntervals(intervals))
 }
 
 const logger = store => next => action => {
