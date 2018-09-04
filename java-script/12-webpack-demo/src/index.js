@@ -7,19 +7,39 @@ import axios from 'axios'
 import $ from 'jquery'
 import './styles/app.css'
 import { DEF_DOMAIN } from './config'
-import { fetchArchives } from './actions'
-import { apiMiddleware } from './middleware'
-import { LoginForm } from '@ruslan2k/react-components'
+import { fetchArchives, resize } from './actions'
+import { logger, apiMiddleware, timelineMiddleware } from './middleware'
+import reducer from './reducer'
+
+const Interval = (props) => {
+  return <span className="time-selection">{props.parentWidth}</span>
+}
 
 class Timeline extends Component {
+  resize() {
+    const width = document.getElementById("t-r").clientWidth
+    this.setState({ width })
+  }
+
   componentDidMount() {
     this.props.fetchArchives()
+    window.addEventListener('resize', this.resize.bind(this))
+    this.resize()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize.bind(this))
   }
 
   render() {
+    console.log('render')
+    const width = (this.state && this.state.width) ? this.state.width : null
+    const intervals = this.props.intervals.map((interval, index) =>
+      <Interval key={index} parentWidth={width} />
+    )
     return (
       <div>
-        <h1>Timeline</h1>
+        <p>Timeline</p>
         <div>
           <ul>
             <li>0:00</li>
@@ -27,12 +47,11 @@ class Timeline extends Component {
             <li>...</li>
             <li>24:00</li>
           </ul>
-          <div id="t-r" class="time-range">
-            <span class="time-current"></span>
+          <div id="t-r" className="time-range">
+            <span className="time-current"></span>
           </div>
-          <div class="timeline">
-            <span id="s1" class="time-selection">s1</span>
-            <span id="s2" class="time-selection">s2</span>
+          <div className="timeline">
+            {intervals}
           </div>
         </div>
       </div>
@@ -44,6 +63,12 @@ Timeline.propTypes = {
   fetchArchives: PropTypes.func.isRequired
 }
 
+const mapStateToProps = state => {
+  return {
+    intervals: state.intervals
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return {
     fetchArchives: () => dispatch(fetchArchives())
@@ -51,50 +76,19 @@ const mapDispatchToProps = dispatch => {
 }
 
 const VisibleTimeline = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Timeline)
 
-const reducer = (state, action) => {
-  return state
-}
-
-var store = createStore(reducer, applyMiddleware(apiMiddleware))
+var store = createStore(
+  reducer,
+  applyMiddleware(
+    logger,
+    apiMiddleware,
+    timelineMiddleware
+))
 
 var App = (function () {
-  var MIN_IN_DAY = 1440
-  var blockWidth = $('.time-range').width()
-  var minutesInPixel = MIN_IN_DAY / blockWidth
-
-  const createIntervals = (archives) => {
-    var intervals = []
-    var l = archives.length
-    for (var i = 0, j = 0; i < l; i ++) {
-      var archive = archives[i]
-      var interval = {archives: []}
-      console.log(archive)
-      if (! intervals[j]) {
-        interval.start = archive.start_dt
-        interval.stop = archive.stop_dt
-        interval.archives.push(archive)
-        intervals[j] = interval
-        continue
-      }
-      var stopTime = new Date(intervals[j].stop)
-      var startTime = new Date(archive.start_dt)
-      if (Math.abs(startTime - stopTime) > 60000) {
-        j += 1
-        interval.start = archive.start_dt
-        interval.stop = archive.stop_dt
-        interval.archives.push(archive)
-        intervals[j] = interval
-        continue
-      }
-      intervals[j].stop = archive.stop_dt
-      intervals[j].archives.push(archive)
-    }
-    return intervals
-  }
 
   const init = () => {
     $(window).on('resize', function () {
@@ -133,7 +127,6 @@ $(function () {
 
 ReactDOM.render(
   <div>
-    <LoginForm />
     <Provider store={store}>
       <VisibleTimeline />
     </Provider>

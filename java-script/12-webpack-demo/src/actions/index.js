@@ -1,4 +1,4 @@
-import { API, SET_ARCHIVES } from '../constants'
+import { API, SET_ARCHIVES, SET_INTERVALS } from '../constants'
 
 const fetchArchives = () => {
   return {
@@ -13,11 +13,19 @@ const fetchArchives = () => {
 const setArchives = (data) => {
   return {
     type: SET_ARCHIVES,
-    payload: data
+    payload: data.archives
+  }
+}
+
+const setIntervals = (intervals) => {
+  return {
+    type: SET_INTERVALS,
+    payload: intervals
   }
 }
 
 export {
   fetchArchives,
-  setArchives
+  setArchives,
+  setIntervals,
 }
