@@ -1,6 +1,5 @@
 import React from 'react'
-
-const MINUTES_IN_A_DAY = 1440
+import { MINUTES_IN_A_DAY } from '../constants'
 
 const Interval = (props) => {
   const { start, stop, parentWidth } = props

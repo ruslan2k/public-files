@@ -4,18 +4,58 @@ import PropTypes from 'prop-types'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider, connect } from 'react-redux'
 import axios from 'axios'
-// import $ from 'jquery'
 import './styles/app.css'
 import { DEF_DOMAIN } from './config'
 import { fetchArchives, resize } from './actions'
 import { logger, apiMiddleware, timelineMiddleware } from './middleware'
 import reducer from './reducer'
 import Interval from './components/interval'
+import { MINUTES_IN_A_DAY } from './constants'
+
+class TimeRange extends Component {
+  // $('.time-range').on('click', function (event) {
+  //   // console.log(event.pageX, event.pageY);
+  //   // $('.time-current').css('left', event.pageX + 'px')
+  //   var posX = $(this).offset().left
+  //   var x = event.pageX - posX
+  //   var currentMinute = x * minutesInPixel
+  //   var hour = currentMinute / 60
+  //   console.log('x', x)
+  //   console.log('currentMinute', currentMinute)
+  //   console.log('hour', hour)
+  // })
+
+  render() {
+    const onClick = (event) => {
+      const rect = ReactDOM.findDOMNode(this)
+      const width = rect.getBoundingClientRect().width
+      const x = event.pageX - rect.getBoundingClientRect().x
+      const minute = (MINUTES_IN_A_DAY * x / width).toFixed()
+      this.props.onClick(minute)
+    }
+    return (
+      <div id="t-r" className="time-range" onClick={onClick}>
+        <span className="time-current"></span>
+      </div>
+    )
+  }
+}
 
 class Timeline extends Component {
+  constructor(props) {
+    super(props)
+
+    // This binding is necessary to make `this` work in the callback
+    this.timeLineClick = this.timeLineClick.bind(this)
+  }
+
   resize() {
     const width = document.getElementById("t-r").clientWidth
     this.setState({ width })
+  }
+
+  timeLineClick(xCoord) {
+    console.log('xCoord', xCoord)
   }
 
   componentDidMount() {
@@ -43,6 +83,7 @@ class Timeline extends Component {
       <div>
         <p>Timeline</p>
         <div>
+          {/*
           <ul style={uiStyle}>
             <li>0:00</li><li>1:00</li><li>2:00</li><li>3:00</li><li>4:00</li>
             <li>5:00</li><li>6:00</li><li>7:00</li><li>8:00</li><li>9:00</li>
@@ -50,9 +91,8 @@ class Timeline extends Component {
             <li>15:00</li><li>16:00</li><li>17:00</li><li>18:00</li><li>19:00</li>
             <li>20:00</li><li>21:00</li><li>22:00</li><li>23:00</li><li>24:00</li>
           </ul>
-          <div id="t-r" className="time-range">
-            <span className="time-current"></span>
-          </div>
+          */}
+          <TimeRange onClick={this.timeLineClick} />
           <div className="timeline">
             {intervals}
           </div>
