@@ -10,40 +10,31 @@ import { fetchArchives, resize } from './actions'
 import { logger, apiMiddleware, timelineMiddleware } from './middleware'
 import reducer from './reducer'
 import Interval from './components/interval'
-import { MINUTES_IN_A_DAY } from './constants'
-
-class TimeRange extends Component {
-  render() {
-    const onClick = (event) => {
-      const rect = ReactDOM.findDOMNode(this)
-      const width = rect.getBoundingClientRect().width
-      const x = event.pageX - rect.getBoundingClientRect().x
-      const minute = (MINUTES_IN_A_DAY * x / width).toFixed()
-      this.props.onClick(minute)
-    }
-    return (
-      <div id="t-r" className="time-range" onClick={onClick}>
-        <span className="time-current"></span>
-      </div>
-    )
-  }
-}
+import TimeRange from './components/TimeRange'
 
 const getActiveIntervals = (intervals, xMinute) => {
   return intervals.filter((interval) => {
-    // console.log(interval)
     const stopOffset = interval.stop.getHours() * 60 + interval.stop.getMinutes()
-    console.log('stopOffset', stopOffset)
     return (xMinute < stopOffset)
   })
 }
 
-
+const getActualOffset = (interval, xMinute) => {
+  const startMinute = interval.start.getHours() * 60 + interval.start.getMinutes()
+  const stopMinute = interval.stop.getHours() * 60 + interval.stop.getMinutes()
+  console.log('startMinute', startMinute)
+  console.log('stopMinute', stopMinute)
+  if (startMinute < xMinute && stopMinute > xMinute) {
+    const date = new Date(interval.start.toDateString())
+    return new Date(date.getTime() + (xMinute * 60 * 1000))
+  }
+  return interval.start
+}
 
 class Timeline extends Component {
   constructor(props) {
     super(props)
-
+    this.state = {actualMinute: 0}
     // This binding is necessary to make `this` work in the callback
     this.timeLineClick = this.timeLineClick.bind(this)
   }
@@ -57,9 +48,12 @@ class Timeline extends Component {
     console.log('xCoord', xCoord)
     const intervals = this.props.intervals
     const activeIntervals = getActiveIntervals(intervals, xCoord)
-    // console.log('activeIntervals', activeIntervals)
     const currentInterval = (activeIntervals.length) ? activeIntervals[0] : intervals.slice(-1)[0]
-    console.log('currentInterval', currentInterval)
+    const actualOffset = getActualOffset(currentInterval, xCoord)
+    const actualMinute = actualOffset.getHours() * 60 + actualOffset.getMinutes();
+    console.log('actualOffset', actualOffset)
+    console.log('actualMinute', actualMinute)
+    this.setState({actualMinute: actualMinute})
   }
 
   componentDidMount() {
@@ -83,6 +77,7 @@ class Timeline extends Component {
       right: 0,
       width: '100%'
     }
+    // console.log('this.state.actualMinute', this.state.actualMinute)
     return (
       <div>
         <p>Timeline</p>
@@ -96,7 +91,7 @@ class Timeline extends Component {
             <li>20:00</li><li>21:00</li><li>22:00</li><li>23:00</li><li>24:00</li>
           </ul>
           */}
-          <TimeRange onClick={this.timeLineClick} />
+          <TimeRange onClick={this.timeLineClick} actualMinute={this.state.actualMinute} />
           <div className="timeline">
             {intervals}
           </div>
