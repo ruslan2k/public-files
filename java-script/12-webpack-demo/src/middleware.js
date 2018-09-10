@@ -10,23 +10,23 @@ const createIntervals = (archives) => {
     var archive = archives[i]
     var interval = {archives: []}
     if (! intervals[j]) {
-      interval.start = archive.start_dt
-      interval.stop = archive.stop_dt
+      interval.start = new Date(archive.start_dt)
+      interval.stop = new Date(archive.stop_dt)
       interval.archives.push(archive)
       intervals[j] = interval
       continue
     }
-    var stopTime = new Date(intervals[j].stop)
+    var stopTime = intervals[j].stop
     var startTime = new Date(archive.start_dt)
     if (Math.abs(startTime - stopTime) > 60000) {
       j += 1
-      interval.start = archive.start_dt
-      interval.stop = archive.stop_dt
+      interval.start = startTime
+      interval.stop = new Date(archive.stop_dt)
       interval.archives.push(archive)
       intervals[j] = interval
       continue
     }
-    intervals[j].stop = archive.stop_dt
+    intervals[j].stop = new Date(archive.stop_dt)
     intervals[j].archives.push(archive)
   }
   return intervals

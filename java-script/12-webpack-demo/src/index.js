@@ -13,18 +13,6 @@ import Interval from './components/interval'
 import { MINUTES_IN_A_DAY } from './constants'
 
 class TimeRange extends Component {
-  // $('.time-range').on('click', function (event) {
-  //   // console.log(event.pageX, event.pageY);
-  //   // $('.time-current').css('left', event.pageX + 'px')
-  //   var posX = $(this).offset().left
-  //   var x = event.pageX - posX
-  //   var currentMinute = x * minutesInPixel
-  //   var hour = currentMinute / 60
-  //   console.log('x', x)
-  //   console.log('currentMinute', currentMinute)
-  //   console.log('hour', hour)
-  // })
-
   render() {
     const onClick = (event) => {
       const rect = ReactDOM.findDOMNode(this)
@@ -41,6 +29,17 @@ class TimeRange extends Component {
   }
 }
 
+const getActiveIntervals = (intervals, xMinute) => {
+  return intervals.filter((interval) => {
+    // console.log(interval)
+    const stopOffset = interval.stop.getHours() * 60 + interval.stop.getMinutes()
+    console.log('stopOffset', stopOffset)
+    return (xMinute < stopOffset)
+  })
+}
+
+
+
 class Timeline extends Component {
   constructor(props) {
     super(props)
@@ -56,6 +55,11 @@ class Timeline extends Component {
 
   timeLineClick(xCoord) {
     console.log('xCoord', xCoord)
+    const intervals = this.props.intervals
+    const activeIntervals = getActiveIntervals(intervals, xCoord)
+    // console.log('activeIntervals', activeIntervals)
+    const currentInterval = (activeIntervals.length) ? activeIntervals[0] : intervals.slice(-1)[0]
+    console.log('currentInterval', currentInterval)
   }
 
   componentDidMount() {
@@ -71,7 +75,7 @@ class Timeline extends Component {
   render() {
     const width = (this.state && this.state.width) ? this.state.width : null
     const intervals = this.props.intervals.map((interval, index) =>
-      <Interval key={index} parentWidth={width} {...interval}/>
+      <Interval key={index} parentWidth={width} {...interval} />
     )
     const uiStyle = {
       position: "absolute",
