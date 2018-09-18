@@ -11,6 +11,7 @@ import { logger, apiMiddleware, timelineMiddleware } from './middleware'
 import reducer from './reducer'
 import Interval from './components/interval'
 import TimeRange from './components/TimeRange'
+import VideoPlayer from './components/VideoPlayer'
 
 const getActiveIntervals = (intervals, xMinute) => {
   return intervals.filter((interval) => {
@@ -72,8 +73,17 @@ class Timeline extends Component {
       right: 0,
       width: '100%'
     }
+    const videoJsOptions = {
+      autoplay: false,
+      controls: true,
+      sources: [{
+        src: 'http://www.papytane.com/mp4/paysborn.mp4',
+        type: 'video/mp4',
+      }]
+    };
     return (
       <div>
+        <VideoPlayer { ...videoJsOptions } />
         <p>Timeline</p>
         <div>
           {/*
