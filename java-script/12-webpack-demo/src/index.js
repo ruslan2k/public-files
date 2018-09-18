@@ -22,8 +22,6 @@ const getActiveIntervals = (intervals, xMinute) => {
 const getActualOffset = (interval, xMinute) => {
   const startMinute = interval.start.getHours() * 60 + interval.start.getMinutes()
   const stopMinute = interval.stop.getHours() * 60 + interval.stop.getMinutes()
-  console.log('startMinute', startMinute)
-  console.log('stopMinute', stopMinute)
   if (startMinute < xMinute && stopMinute > xMinute) {
     const date = new Date(interval.start.toDateString())
     return new Date(date.getTime() + (xMinute * 60 * 1000))
@@ -45,14 +43,11 @@ class Timeline extends Component {
   }
 
   timeLineClick(xCoord) {
-    console.log('xCoord', xCoord)
     const intervals = this.props.intervals
     const activeIntervals = getActiveIntervals(intervals, xCoord)
     const currentInterval = (activeIntervals.length) ? activeIntervals[0] : intervals.slice(-1)[0]
     const actualOffset = getActualOffset(currentInterval, xCoord)
     const actualMinute = actualOffset.getHours() * 60 + actualOffset.getMinutes();
-    console.log('actualOffset', actualOffset)
-    console.log('actualMinute', actualMinute)
     this.setState({actualMinute: actualMinute})
   }
 
@@ -77,7 +72,6 @@ class Timeline extends Component {
       right: 0,
       width: '100%'
     }
-    // console.log('this.state.actualMinute', this.state.actualMinute)
     return (
       <div>
         <p>Timeline</p>
@@ -129,43 +123,6 @@ var store = createStore(
     apiMiddleware,
     timelineMiddleware
 ))
-
-// var App = (function () {
-//
-//   const init = () => {
-//     $(window).on('resize', function () {
-//       blockWidth = $('.time-range').width()
-//       minutesInPixel = MIN_IN_DAY / blockWidth
-//       console.log('minInPixel', minutesInPixel)
-//       axios.get(DEF_DOMAIN + '/json')
-//         .then(resp => {
-//           console.log(resp.data)
-//           console.log(createIntervals(resp.data.archives))
-//         })
-//         .catch(err => console.log(err))
-//     })
-//     $('.time-range').on('click', function (event) {
-//       // console.log(event.pageX, event.pageY);
-//       $('.time-current').css('left', event.pageX + 'px')
-//       var posX = $(this).offset().left
-//       var posY = $(this).offset().top
-//       var x = event.pageX - posX
-//       var currentMinute = x * minutesInPixel
-//       var hour = currentMinute / 60
-//       console.log('x', x)
-//       console.log('currentMinute', currentMinute)
-//       console.log('hour', hour)
-//     })
-//   }
-//
-//   return {
-//     init
-//   }
-// }())
-//
-// $(function () {
-//   // App.init()
-// })
 
 ReactDOM.render(
   <div>
